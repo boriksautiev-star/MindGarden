@@ -32,18 +32,26 @@ export function NodeInspector({ nodeId, profile, onAskAgent, onClose }: { nodeId
 
   const handleGetInsight = async () => {
     setIsLoadingInsight(true);
+    setInsight(null); // Сбрасываем предыдущий результат
     
-    // Находим родителей и детей
-    const parentEdges = edges.filter(e => e.target === node.id);
-    const childEdges = edges.filter(e => e.source === node.id);
-    
-    const parentLabels = parentEdges.map(e => nodes.find(n => n.id === e.source)?.label || '').filter(Boolean);
-    const childLabels = childEdges.map(e => nodes.find(n => n.id === e.target)?.label || '').filter(Boolean);
+    try {
+      // Находим родителей и детей
+      const parentEdges = edges.filter(e => e.target === node.id);
+      const childEdges = edges.filter(e => e.source === node.id);
+      
+      const parentLabels = parentEdges.map(e => nodes.find(n => n.id === e.source)?.label || '').filter(Boolean);
+      const childLabels = childEdges.map(e => nodes.find(n => n.id === e.target)?.label || '').filter(Boolean);
 
-    const text = await getNodeInsight(node.label, parentLabels, childLabels, settings, profile);
-    setInsight(text);
-    setIsLoadingInsight(false);
+      const text = await getNodeInsight(node.label, parentLabels, childLabels, settings, profile);
+      setInsight(text);
+    } catch {
+      setInsight('Ошибка: Не удалось получить рассуждение.');
+    } finally {
+      setIsLoadingInsight(false);
+    }
   };
+
+  const isError = insight && (insight.startsWith('Ошибка') || insight.includes('не настроен'));
 
   return (
     <div className="side-panel">
@@ -89,9 +97,12 @@ export function NodeInspector({ nodeId, profile, onAskAgent, onClose }: { nodeId
           )}
         </div>
         {isLoadingInsight && <div style={{ fontSize: 13, color: '#888' }}>Анализирую связи...</div>}
+        
         {insight && (
           <>
-            <div style={{ fontSize: 13, color: '#334155', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>{insight}</div>
+            <div style={{ fontSize: 13, color: isError ? '#c00' : '#334155', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+              {insight}
+            </div>
             <button onClick={handleGetInsight} style={{ marginTop: 8, fontSize: 11, padding: '4px 8px', borderRadius: 6, border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer', width: '100%' }}>
               Обновить
             </button>
