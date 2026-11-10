@@ -19,30 +19,30 @@ function extractJSON(text: string) {
 }
 
 const PROFILE_PROMPTS: Record<AIProfile, string> = {
-  psychology: `РўС‹ вЂ” РїРѕРґРґРµСЂР¶РёРІР°СЋС‰РёР№ РїСЃРёС…РѕР»РѕРі. Р‘СѓРґСЊ СЌРјРїР°С‚РёС‡РЅС‹Рј, РёС‰Рё С‡СѓРІСЃС‚РІР° Рё РѕРіСЂР°РЅРёС‡РёРІР°СЋС‰РёРµ СѓР±РµР¶РґРµРЅРёСЏ.`,
-  business: `РўС‹ вЂ” Р±РёР·РЅРµСЃ-СЃС‚СЂР°С‚РµРі. Р‘СѓРґСЊ РїСЂСЏРјС‹Рј Рё Р°РЅР°Р»РёС‚РёС‡РЅС‹Рј. РС‰Рё СЂРёСЃРєРё, СѓРїСѓС‰РµРЅРЅСѓСЋ РІС‹РіРѕРґСѓ, СЃР»РµРїС‹Рµ Р·РѕРЅС‹.`,
-  academic: `РўС‹ вЂ” СЃС‚СЂРѕРіРёР№ РЅР°СѓС‡РЅС‹Р№ СЂСѓРєРѕРІРѕРґРёС‚РµР»СЊ. РўСЂРµР±СѓР№ С„Р°РєС‚РѕРІ, РґРѕРєР°Р·Р°С‚РµР»СЊСЃС‚РІ, Р»РѕРіРёРєРё.`,
-  finance: `РўС‹ вЂ” С„РёРЅР°РЅСЃРѕРІС‹Р№ СЃРѕРІРµС‚РЅРёРє. РЎС‡РёС‚Р°Р№ С†РёС„СЂС‹, РѕС†РµРЅРёРІР°Р№ СЂРёСЃРєРё, РѕРїС‚РёРјРёР·РёСЂСѓР№ Р±СЋРґР¶РµС‚.`,
-  work: `РўС‹ вЂ” РєР°СЂСЊРµСЂРЅС‹Р№ РєРѕСѓС‡. Р¤РѕРєСѓСЃ РЅР° СЌС„С„РµРєС‚РёРІРЅРѕСЃС‚СЊ, РІС‹РіРѕСЂР°РЅРёРµ, РѕС‚РЅРѕС€РµРЅРёСЏ СЃ СЂСѓРєРѕРІРѕРґСЃС‚РІРѕРј.`
+  psychology: `Ты — поддерживающий психолог. Будь эмпатичным, ищи чувства и ограничивающие убеждения.`,
+  business: `Ты — бизнес-стратег. Будь прямым и аналитичным. Ищи риски, упущенную выгоду, слепые зоны.`,
+  academic: `Ты — строгий научный руководитель. Требуй фактов, доказательств, логики.`,
+  finance: `Ты — финансовый советник. Считай цифры, оценивай риски, оптимизируй бюджет.`,
+  work: `Ты — карьерный коуч. Фокус на эффективность, выгорание, отношения с руководством.`
 };
 
 const getSystemPrompt = (mode: AgentMode, profile: AIProfile) => {
-  const base = `РўС‹ вЂ” РїР°СЂС‚РЅС‘СЂ РїРѕ РјС‹С€Р»РµРЅРёСЋ РІ РїСЂРёР»РѕР¶РµРЅРёРё "РњС‹СЃР»РµРЅРЅС‹Р№ СЃР°Рґ".
-РўРІРѕР№ РїСЂРѕС„РёР»СЊ: ${PROFILE_PROMPTS[profile]}
-РћС‚РІРµС‚ СЃС‚СЂРѕРіРѕ РІ С„РѕСЂРјР°С‚Рµ JSON:
+  const base = `Ты — партнёр по мышлению в приложении "Мысленный сад".
+Твой профиль: ${PROFILE_PROMPTS[profile]}
+Ответ строго в формате JSON:
 {
-  "questions": ["РІРѕРїСЂРѕСЃ 1"],
-  "proposed_nodes": [{"type": "thought", "label": "С‚РµРєСЃС‚", "relation": "related"}],
+  "questions": ["вопрос 1"],
+  "proposed_nodes": [{"type": "thought", "label": "текст", "relation": "related"}],
   "flags": []
 }
-РўРёРїС‹ СѓР·Р»РѕРІ: thought, question, fact, assumption, criterion, option.
-РўРёРїС‹ СЃРІСЏР·РµР№ (relation): "supports", "contradicts", "related".`;
+Типы узлов: thought, question, fact, assumption, criterion, option.
+Типы связей (relation): "supports", "contradicts", "related".`;
 
   switch (mode) {
-    case 'clarify': return base + `\nР Р•Р–РРњ: РЈС‚РѕС‡РЅРµРЅРёРµ. Р—Р°РґР°Р№ 1-2 РІРѕРїСЂРѕСЃР°. РџСЂРµРґР»РѕР¶Рё 1-2 СѓР·Р»Р°.`;
-    case 'assumptions': return base + `\nР Р•Р–РРњ: РџРѕРёСЃРє РґРѕРїСѓС‰РµРЅРёР№. РќР°Р№РґРё РѕРіСЂР°РЅРёС‡РёРІР°СЋС‰РёРµ СѓР±РµР¶РґРµРЅРёСЏ. РЎС„РѕСЂРјСѓР»РёСЂСѓР№ РёС… Р±РµСЂРµР¶РЅРѕ. РџСЂРµРґР»РѕР¶Рё СѓР·Р»С‹ С‚РёРїР° "assumption".`;
-    case 'critique': return base + `\nР Р•Р–РРњ: РџРѕРёСЃРє СЂРµСЃСѓСЂСЃРѕРІ. РќР°Р№РґРё С‚Рѕ, С‡С‚Рѕ РґР°РµС‚ СЃРёР»С‹. РџСЂРµРґР»РѕР¶Рё СѓР·Р»С‹ С‚РёРїР° "fact" РёР»Рё "criterion" СЃРѕ СЃРІСЏР·СЊСЋ "supports".`;
-    case 'options': return base + `\nР Р•Р–РРњ: Р’Р°СЂРёР°РЅС‚С‹ РґРµР№СЃС‚РІРёР№. РџСЂРµРґР»РѕР¶Рё 2-3 РњРђР›Р•РќР¬РљРРҐ С€Р°РіР°. РўРёРї "option".`;
+    case 'clarify': return base + `\nРЕЖИМ: Уточнение. Задай 1-2 вопроса. Предложи 1-2 узла.`;
+    case 'assumptions': return base + `\nРЕЖИМ: Поиск допущений. Найди ограничивающие убеждения. Сформулируй их бережно. Предложи узлы типа "assumption".`;
+    case 'critique': return base + `\nРЕЖИМ: Поиск ресурсов. Найди то, что дает силы. Предложи узлы типа "fact" или "criterion" со связью "supports".`;
+    case 'options': return base + `\nРЕЖИМ: Варианты действий. Предложи 2-3 МАЛЕНЬКИХ шага. Тип "option".`;
     default: return base;
   }
 };
@@ -53,14 +53,14 @@ export async function askAgent(
   mode: AgentMode = 'clarify', 
   profile: AIProfile = 'psychology'
 ): Promise<AgentResponse | { error: string }> {
-  if (!settings || !settings.apiKey) return { error: 'РљР»СЋС‡ РЅРµ РЅР°СЃС‚СЂРѕРµРЅ.' };
+  if (!settings || !settings.apiKey) return { error: 'Ключ не настроен.' };
 
   const { provider, apiKey } = settings;
   const sysPrompt = getSystemPrompt(mode, profile);
   const lastUserMsg = history[history.length - 1].content;
 
-  if (/(СЃСѓРёС†РёРґ|СѓР±РёС‚СЊ СЃРµР±СЏ|РЅРµ С…РѕС‡Сѓ Р¶РёС‚СЊ|РїРѕРєРѕРЅС‡РёС‚СЊ СЃ СЃРѕР±РѕР№)/i.test(lastUserMsg)) {
-    return { error: 'РџРѕС…РѕР¶Рµ, С‚РµР±Рµ СЃРµР№С‡Р°СЃ РѕС‡РµРЅСЊ С‚СЏР¶РµР»Рѕ. РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РїРѕР·РІРѕРЅРё РЅР° Р±РµСЃРїР»Р°С‚РЅСѓСЋ Р»РёРЅРёСЋ РїСЃРёС…РѕР»РѕРіРёС‡РµСЃРєРѕР№ РїРѕРјРѕС‰Рё: 8-800-2000-122.' };
+  if (/(суицид|убить себя|не хочу жить|покончить с собой)/i.test(lastUserMsg)) {
+    return { error: 'Похоже, тебе сейчас очень тяжело. Пожалуйста, позвони на бесплатную линию психологической помощи: 8-800-2000-122.' };
   }
 
   try {
@@ -73,7 +73,7 @@ export async function askAgent(
       const token = (await tokenRes.json()).access_token;
       
       const messages = [
-        { role: 'system', content: sysPrompt + '\n\nР’РђР–РќРћ: Р’РµСЂРЅРё РѕС‚РІРµС‚ РўРћР›Р¬РљРћ РІ РІРёРґРµ РІР°Р»РёРґРЅРѕРіРѕ JSON.' },
+        { role: 'system', content: sysPrompt + '\n\nВАЖНО: Верни ответ ТОЛЬКО в виде валидного JSON.' },
         ...history.map(m => ({ role: m.role, content: m.content }))
       ];
 
@@ -84,36 +84,36 @@ export async function askAgent(
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return extractJSON((await res.json()).choices[0].message.content);
     }
-    return { error: 'РџРѕРєР° РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ GigaChat' };
+    return { error: 'Пока поддерживается только GigaChat' };
   } catch (err: any) {
-    return { error: `РћС€РёР±РєР°: ${err.message}` };
+    return { error: `Ошибка: ${err.message}` };
   }
 }
 
 export async function generateInitialTree(text: string, settings: Settings | null, profile: AIProfile, buildMode: BuildMode): Promise<GraphInitialResponse | { error: string }> {
-  if (!settings || !settings.apiKey) return { error: 'РљР»СЋС‡ РЅРµ РЅР°СЃС‚СЂРѕРµРЅ.' };
+  if (!settings || !settings.apiKey) return { error: 'Ключ не настроен.' };
 
-  let treeSizePrompt = "РЎРѕР·РґР°Р№ 4-7 СѓР·Р»РѕРІ.";
+  let treeSizePrompt = "Создай 4-7 узлов.";
   if (buildMode === 'auto') {
-    // Р–Р•РЎРўРљРћР• РћР“Р РђРќРР§Р•РќРР•: Р РѕРІРЅРѕ 10 СѓР·Р»РѕРІ
-    treeSizePrompt = `РЎРѕР·РґР°Р№ РґРµСЂРµРІРѕ Р РћР’РќРћ РР— 10 РЈР—Р›РћР’ (РЅРµ Р±РѕР»СЊС€Рµ Рё РЅРµ РјРµРЅСЊС€Рµ). 
-РЎС‚СЂСѓРєС‚СѓСЂР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ С‚Р°РєРѕР№:
-- 1 РєРѕСЂРЅРµРІРѕР№ СѓР·РµР» (РіР»Р°РІРЅР°СЏ РјС‹СЃР»СЊ).
-- 3 РіР»Р°РІРЅС‹Рµ РІРµС‚РєРё (РґРѕС‡РµСЂРЅРёРµ СѓР·Р»С‹ РѕС‚ РєРѕСЂРЅСЏ).
-- Рљ РєР°Р¶РґРѕР№ РёР· 3 РіР»Р°РІРЅС‹С… РІРµС‚РѕРє РґРѕР±Р°РІСЊ Р РћР’РќРћ РїРѕ 2 РїРѕРґСѓР·Р»Р°.
-РС‚РѕРіРѕ: 1 + 3 + 6 = 10 СѓР·Р»РѕРІ. 
-Р Р°СЃРєСЂРѕР№ С‚РµРјСѓ СЃС‚СЂСѓРєС‚СѓСЂРЅРѕ Рё РѕСЃРјС‹СЃР»РµРЅРЅРѕ, РЅРѕ СЃС‚СЂРѕРіРѕ РІ СЂР°РјРєР°С… 10 СѓР·Р»РѕРІ.`;
+    // ЖЕСТКОЕ ОГРАНИЧЕНИЕ: Ровно 10 узлов
+    treeSizePrompt = `Создай дерево РОВНО ИЗ 10 УЗЛОВ (не больше и не меньше). 
+Структура должна быть такой:
+- 1 корневой узел (главная мысль).
+- 3 главные ветки (дочерние узлы от корня).
+- К каждой из 3 главных веток добавь РОВНО по 2 подузла.
+Итого: 1 + 3 + 6 = 10 узлов. 
+Раскрой тему структурно и осмысленно, но строго в рамках 10 узлов.`;
   }
 
-  const sysPrompt = `РўС‹ вЂ” РјСѓРґСЂС‹Р№ СЃР°РґРѕРІРЅРёРє РјС‹СЃР»РµР№. РџСЂРѕС„РёР»СЊ: ${PROFILE_PROMPTS[profile]}.
-РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІС‹РІР°Р»РёР» С…Р°РѕСЃ РёР· СЃРІРѕРёС… РјС‹СЃР»РµР№. РўРІРѕСЏ Р·Р°РґР°С‡Р° вЂ” СЃС‚СЂСѓРєС‚СѓСЂРёСЂРѕРІР°С‚СЊ СЌС‚Рѕ РІ РґРµСЂРµРІРѕ.
+  const sysPrompt = `Ты — мудрый садовник мыслей. Профиль: ${PROFILE_PROMPTS[profile]}.
+Пользователь вывалил хаос из своих мыслей. Твоя задача — структурировать это в дерево.
 ${treeSizePrompt}
-РћРґРёРЅ РёР· СѓР·Р»РѕРІ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РіР»Р°РІРЅРѕР№ РјС‹СЃР»СЊСЋ (РєРѕСЂРЅРµРј).
-РћР±СЏР·Р°С‚РµР»СЊРЅРѕ СЃРІСЏР¶Рё РёС… (РѕС‚ РєРѕСЂРЅСЏ Рє РѕСЃС‚Р°Р»СЊРЅС‹Рј).
+Один из узлов должен быть главной мыслью (корнем).
+Обязательно свяжи их (от корня к остальным).
 
-РћС‚РІРµС‚ СЃС‚СЂРѕРіРѕ РІ С„РѕСЂРјР°С‚Рµ JSON:
+Ответ строго в формате JSON:
 {
-  "nodes": [{"id": "n1", "label": "С‚РµРєСЃС‚", "type": "thought|question|fact|assumption|criterion|option"}],
+  "nodes": [{"id": "n1", "label": "текст", "type": "thought|question|fact|assumption|criterion|option"}],
   "edges": [{"source": "n1", "target": "n2", "relation": "supports|contradicts|related"}]
 }`;
 
@@ -129,37 +129,37 @@ ${treeSizePrompt}
       
       const res = await fetch('/gigachat-api/v1/chat/completions', {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt + '\n\nР’РђР–РќРћ: Р’РµСЂРЅРё РѕС‚РІРµС‚ РўРћР›Р¬РљРћ РІ РІРёРґРµ РІР°Р»РёРґРЅРѕРіРѕ JSON.' }, { role: 'user', content: text }] })
+        body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt + '\n\nВАЖНО: Верни ответ ТОЛЬКО в виде валидного JSON.' }, { role: 'user', content: text }] })
       });
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return extractJSON((await res.json()).choices[0].message.content);
     }
-    return { error: 'РџРѕРєР° РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ GigaChat' };
+    return { error: 'Пока поддерживается только GigaChat' };
   } catch (err: any) {
-    return { error: `РћС€РёР±РєР°: ${err.message}` };
+    return { error: `Ошибка: ${err.message}` };
   }
 }
 
 export async function analyzeGraph(nodes: any[], edges: any[], settings: Settings | null, profile: AIProfile): Promise<GraphAnalysisResponse | { error: string }> {
-  if (!settings || !settings.apiKey) return { error: 'РљР»СЋС‡ РЅРµ РЅР°СЃС‚СЂРѕРµРЅ.' };
-  if (nodes.length === 0) return { error: 'Р“СЂР°С„ РїСѓСЃС‚.' };
+  if (!settings || !settings.apiKey) return { error: 'Ключ не настроен.' };
+  if (nodes.length === 0) return { error: 'Граф пуст.' };
 
-  const nodesText = nodes.map(n => `[ID: ${n.id}] [РўРёРї: ${n.type}] ${n.label}`).join('\n');
-  const edgesText = edges.map(e => `[РћС‚: ${e.source}] -> [Рљ: ${e.target}]`).join('\n');
+  const nodesText = nodes.map(n => `[ID: ${n.id}] [Тип: ${n.type}] ${n.label}`).join('\n');
+  const edgesText = edges.map(e => `[От: ${e.source}] -> [К: ${e.target}]`).join('\n');
   
-  const sysPrompt = `РўС‹ вЂ” РјСѓРґСЂС‹Р№ СЃР°РґРѕРІРЅРёРє РјС‹СЃР»РµР№. РџСЂРѕС„РёР»СЊ: ${PROFILE_PROMPTS[profile]}.
-РќР°Р№РґРё "Р±РµР»С‹Рµ РїСЏС‚РЅР°" Рё РїСЂРµРґР»РѕР¶Рё 3-4 РќРћР’Р«РҐ СѓР·Р»Р°. 
+  const sysPrompt = `Ты — мудрый садовник мыслей. Профиль: ${PROFILE_PROMPTS[profile]}.
+Найди "белые пятна" и предложи 3-4 НОВЫХ узла. 
 
-РЈР—Р›Р«:
+УЗЛЫ:
 ${nodesText}
 
-РЎР’РЇР—Р:
+СВЯЗИ:
 ${edgesText}
 
-РћС‚РІРµС‚ СЃС‚СЂРѕРіРѕ РІ С„РѕСЂРјР°С‚Рµ JSON:
+Ответ строго в формате JSON:
 {
   "suggestions": [
-    { "label": "С‚РµРєСЃС‚", "type": "thought|question|fact|assumption|criterion|option", "connectToId": "ID", "relation": "supports|contradicts|related" }
+    { "label": "текст", "type": "thought|question|fact|assumption|criterion|option", "connectToId": "ID", "relation": "supports|contradicts|related" }
   ]
 }`;
 
@@ -175,14 +175,14 @@ ${edgesText}
       
       const res = await fetch('/gigachat-api/v1/chat/completions', {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt + '\n\nР’РђР–РќРћ: Р’РµСЂРЅРё РѕС‚РІРµС‚ РўРћР›Р¬РљРћ РІ РІРёРґРµ РІР°Р»РёРґРЅРѕРіРѕ JSON.' }, { role: 'user', content: 'РџСЂРѕР°РЅР°Р»РёР·РёСЂСѓР№.' }] })
+        body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt + '\n\nВАЖНО: Верни ответ ТОЛЬКО в виде валидного JSON.' }, { role: 'user', content: 'Проанализируй.' }] })
       });
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return extractJSON((await res.json()).choices[0].message.content);
     }
-    return { error: 'РџРѕРєР° РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ GigaChat' };
+    return { error: 'Пока поддерживается только GigaChat' };
   } catch (err: any) {
-    return { error: `РћС€РёР±РєР° Р°РЅР°Р»РёР·Р°: ${err.message}` };
+    return { error: `Ошибка анализа: ${err.message}` };
   }
 }
 
@@ -193,16 +193,16 @@ export async function getNodeInsight(
   settings: Settings | null, 
   profile: AIProfile
 ): Promise<string> {
-  if (!settings || !settings.apiKey) return 'РљР»СЋС‡ РЅРµ РЅР°СЃС‚СЂРѕРµРЅ.';
+  if (!settings || !settings.apiKey) return 'Ключ не настроен.';
 
   const { provider, apiKey } = settings;
-  const sysPrompt = `РўС‹ вЂ” РјСѓРґСЂС‹Р№ РЅР°СЃС‚Р°РІРЅРёРє. РџСЂРѕС„РёР»СЊ: ${PROFILE_PROMPTS[profile]}.
-РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃРјРѕС‚СЂРёС‚ РЅР° СѓР·РµР» РІ СЃРІРѕРµР№ РєР°СЂС‚Рµ РјС‹СЃР»РµР№. РўРІРѕСЏ Р·Р°РґР°С‡Р° вЂ” РѕР±СЉСЏСЃРЅРёС‚СЊ СЃРјС‹СЃР» СЌС‚РѕРіРѕ СѓР·Р»Р° РІ РєРѕРЅС‚РµРєСЃС‚Рµ.
-РЈР·РµР»: "${nodeLabel}"
-Р РѕРґРёС‚РµР»СЊСЃРєРёРµ РјС‹СЃР»Рё (РѕС‚РєСѓРґР° СЌС‚Рѕ РїСЂРёС€Р»Рѕ): ${parents.length ? parents.join('; ') : 'РЅРµС‚ (СЌС‚Рѕ РєРѕСЂРµРЅСЊ)'}
-Р”РѕС‡РµСЂРЅРёРµ РјС‹СЃР»Рё (Рє С‡РµРјСѓ СЌС‚Рѕ РІРµРґРµС‚): ${children.length ? children.join('; ') : 'РїРѕРєР° РЅРµС‚'}
+  const sysPrompt = `Ты — мудрый наставник. Профиль: ${PROFILE_PROMPTS[profile]}.
+Пользователь смотрит на узел в своей карте мыслей. Твоя задача — объяснить смысл этого узла в контексте.
+Узел: "${nodeLabel}"
+Родительские мысли (откуда это пришло): ${parents.length ? parents.join('; ') : 'нет (это корень)'}
+Дочерние мысли (к чему это ведет): ${children.length ? children.join('; ') : 'пока нет'}
 
-РќР°РїРёС€Рё РћР”РРќ РєРѕСЂРѕС‚РєРёР№ Р°Р±Р·Р°С† (2-3 РїСЂРµРґР»РѕР¶РµРЅРёСЏ). РћР±СЉСЏСЃРЅРё, РїРѕС‡РµРјСѓ СЌС‚Р° РјС‹СЃР»СЊ РІР°Р¶РЅР° Рё РєР°Рє РѕРЅР° СЃРІСЏР·Р°РЅР° СЃ РѕСЃС‚Р°Р»СЊРЅС‹РјРё. Р‘РµР· РІРѕРґС‹.`;
+Напиши ОДИН короткий абзац (2-3 предложения). Объясни, почему эта мысль важна и как она связана с остальными. Без воды.`;
 
   try {
     if (provider === 'gigachat') {
@@ -215,14 +215,14 @@ export async function getNodeInsight(
       
       const res = await fetch('/gigachat-api/v1/chat/completions', {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: 'РћР±СЉСЏСЃРЅРё.' }] })
+        body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: 'Объясни.' }] })
       });
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return (await res.json()).choices[0].message.content;
     }
-    return 'РџРѕРєР° РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ GigaChat.';
+    return 'Пока поддерживается только GigaChat.';
   } catch (err: any) {
-    return `РћС€РёР±РєР°: ${err.message}`;
+    return `Ошибка: ${err.message}`;
   }
 }
 export async function expandNode(
