@@ -1,0 +1,99 @@
+:root {
+  --bg: #fafaf9;
+  --panel: #ffffff;
+  --text: #111111;
+  --muted: #888888;
+  --border: #e5e5e5;
+  --accent: #111111;
+  --accent-text: #ffffff;
+  --radius: 12px;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Панели (Агент и Инспектор) */
+.side-panel {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 320px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+/* Кнопки в верхней панели */
+.top-bar {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 1000;
+  flex-wrap: wrap;
+  max-width: calc(100vw - 32px);
+}
+
+.top-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.top-btn.primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  border: 0;
+}
+
+/* Мобильная версия (экраны < 768px) */
+@media (max-width: 768px) {
+  .side-panel {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+    max-height: 60vh;
+    padding: 20px;
+    /* Отступ для системных кнопок Android/iOS */
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 20px));
+    box-sizing: border-box;
+  }
+  .top-bar {
+    top: 12px;
+    left: 12px;
+    gap: 6px;
+  }
+  .top-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}

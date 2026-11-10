@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dev-dist/
+build/
+
+# PWA artifacts
+sw.js
+workbox-*.js
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Large binaries / tools
+cloudflared.exe
+*.exe
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Vite cache
+.vite/
+node_modules/.vite/
+
+# TypeScript
+*.tsbuildinfo
