@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { analyzeGraph } from '../ai';
 import { useStore } from '../store';
 import type { GraphAnalysisResponse, AIProfile } from '../types';
+import { calculateChildPosition } from '../utils/position';
 
 export function GraphAnalyzerPanel({ profile, onClose }: { profile: AIProfile; onClose: () => void }) {
   const { nodes, edges, settings, addNode, addEdge } = useStore();
@@ -22,7 +23,7 @@ export function GraphAnalyzerPanel({ profile, onClose }: { profile: AIProfile; o
     let parent = nodes.find(n => n.id === suggestion.connectToId);
     if (!parent && nodes.length > 0) parent = nodes[0]; 
     
-    const pos = parent ? { x: parent.x + (Math.random() * 100 - 50), y: parent.y + 180 } : { x: 0, y: 0 };
+    const pos = calculateChildPosition(parent, edges, parent?.id);
     
     const newNode = await addNode(suggestion.label, suggestion.type, pos);
     

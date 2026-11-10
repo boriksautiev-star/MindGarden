@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { askAgent } from '../ai';
 import { useStore } from '../store';
 import type { AgentResponse, AgentMode, EdgeType, AIProfile, ChatMessage } from '../types';
+import { calculateChildPosition } from '../utils/position';
 
 export function AgentPanel({ initialText, sourceNodeId, profile, onClose }: { initialText: string; sourceNodeId?: string; profile: AIProfile; onClose: () => void }) {
   const { settings, addNode, addEdge, nodes, edges } = useStore();
@@ -42,24 +43,8 @@ export function AgentPanel({ initialText, sourceNodeId, profile, onClose }: { in
   };
 
   const handleAddNode = async (type: any, label: string, relation: EdgeType = 'related') => {
-    let pos = { x: Math.random() * 200, y: Math.random() * 200 };
-    
-    if (sourceNodeId) {
-      const parent = nodes.find(n => n.id === sourceNodeId);
-      if (parent) {
-        // Считаем, сколько уже есть "детей" у этого родителя
-        const siblingsCount = edges.filter(e => e.source === sourceNodeId).length;
-        
-        // Раскладываем в сетку (2 колонки)
-        const col = siblingsCount % 2;
-        const row = Math.floor(siblingsCount / 2);
-        
-        pos = { 
-          x: parent.x + 50 + (col * 220), // Сдвиг вправо на 220px для второй колонки
-          y: parent.y + 150 + (row * 130) // Сдвиг вниз на 130px для каждого нового ряда
-        };
-      }
-    }
+    const parent = sourceNodeId ? nodes.find(n => n.id === sourceNodeId) : undefined;
+    const pos = calculateChildPosition(parent, edges, sourceNodeId);
     
     const newNode = await addNode(label, type, pos);
     if (sourceNodeId) await addEdge(sourceNodeId, newNode.id, relation);
