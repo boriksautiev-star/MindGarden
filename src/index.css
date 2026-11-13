@@ -8,34 +8,13 @@
   --accent-text: #ffffff;
   --radius: 12px;
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-
-  --edge-supports: #10b981;
-  --edge-contradicts: #ef4444;
-  --edge-related: #9ca3af;
-
-  --node-thought-bg: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
-  --node-thought-border: #d1d5db;
-  --node-thought-color: #111827;
-  
-  --node-question-bg: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-  --node-question-border: #60a5fa;
-  --node-question-color: #1e3a8a;
-  
-  --node-fact-bg: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-  --node-fact-border: #34d399;
-  --node-fact-color: #064e3b;
-  
-  --node-assumption-bg: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-  --node-assumption-border: #fbbf24;
-  --node-assumption-color: #78350f;
-  
-  --node-criterion-bg: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
-  --node-criterion-border: #a78bfa;
-  --node-criterion-color: #4c1d95;
-  
-  --node-option-bg: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
-  --node-option-border: #fb923c;
-  --node-option-color: #7c2d12;
+  --edge-supports: #10b981; --edge-contradicts: #ef4444; --edge-related: #9ca3af;
+  --node-thought-bg: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%); --node-thought-border: #d1d5db; --node-thought-color: #111827;
+  --node-question-bg: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); --node-question-border: #60a5fa; --node-question-color: #1e3a8a;
+  --node-fact-bg: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); --node-fact-border: #34d399; --node-fact-color: #064e3b;
+  --node-assumption-bg: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); --node-assumption-border: #fbbf24; --node-assumption-color: #78350f;
+  --node-criterion-bg: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); --node-criterion-border: #a78bfa; --node-criterion-color: #4c1d95;
+  --node-option-bg: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); --node-option-border: #fb923c; --node-option-color: #7c2d12;
 }
 
 [data-theme="cosmic"] {
@@ -101,16 +80,15 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; -w
 [data-theme="cosmic"] .react-flow__edge-path { stroke-width: 3px; stroke-dasharray: 8 4; animation: energyFlow 1.5s linear infinite; }
 @keyframes energyFlow { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
 
-/* Настройки MiniMap */
+/* Стили для MiniMap */
 .react-flow__minimap {
   border-radius: 12px !important;
   border: 1px solid var(--border) !important;
   box-shadow: var(--shadow) !important;
   background-color: var(--panel) !important;
   overflow: hidden;
-}
-[data-theme="cosmic"] .react-flow__minimap-mask {
-  fill: rgba(0, 0, 0, 0.5) !important;
+  bottom: 16px !important;
+  right: 16px !important;
 }
 
 @media (max-width: 768px) {
@@ -119,12 +97,13 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; -w
   .top-btn { padding: 8px 12px; font-size: 13px; display: none; }
   .top-btn.mobile-show { display: flex; }
   
-  /* Прячем миникарту на мобилках, чтобы не мешала, или делаем её маленькой */
+  /* Мини-карта на мобилках: полупрозрачная и не мешает */
   .react-flow__minimap {
-    width: 100px !important;
-    height: 80px !important;
-    bottom: 16px !important;
-    right: 16px !important;
+    width: 90px !important;
+    height: 70px !important;
+    bottom: 12px !important;
+    right: 12px !important;
+    opacity: 0.7;
   }
 }
 

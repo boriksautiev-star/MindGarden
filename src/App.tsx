@@ -15,7 +15,7 @@ import { ActionPlanModal } from './components/ActionPlanModal';
 import { AutoLinkModal } from './components/AutoLinkModal';
 import { DebateModal } from './components/DebateModal';
 import { generateInitialTree, expandNode } from './ai';
-import type { BuildMode } from './types';
+import type { BuildMode, NodeType } from './types';
 
 const nodeTypes = { custom: ThoughtNode };
 const edgeTypes = { custom: ThoughtEdge };
@@ -42,8 +42,6 @@ export default function App() {
   const [showActionPlan, setShowActionPlan] = useState(false);
   const [showAutoLink, setShowAutoLink] = useState(false);
   const [debateNodeId, setDebateNodeId] = useState<string | null>(null);
-  
-  // Стейт для мобильного меню
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   useEffect(() => { loadInitial(); }, [loadInitial]);
@@ -102,8 +100,7 @@ export default function App() {
     try {
       const dagreGraph = new dagre.graphlib.Graph();
       dagreGraph.setDefaultEdgeLabel(() => ({}));
-      // Уменьшили отступы для более компактного графа
-      dagreGraph.setGraph({ rankdir: 'TB', nodesep: 30, ranksep: 50 }); 
+      dagreGraph.setGraph({ rankdir: 'TB', nodesep: 30, ranksep: 50 });
       
       currentNodes.forEach((node) => dagreGraph.setNode(node.id, { width: 200, height: 80 }));
       currentEdges.forEach((edge) => dagreGraph.setEdge(edge.source, edge.target));
@@ -182,7 +179,7 @@ export default function App() {
 
   const onConnect = useCallback((params: Connection) => {
     if (params.source && params.target) {
-      setRfEdges((eds) => addEdge({ ...params, type: 'custom', animated: true, style: { stroke: '#9ca3af', strokeDasharray: '5,5' } }, eds));
+      setRfEdges((eds) => addEdge({ ...params, type: 'custom', animated: true, style: { stroke: 'var(--edge-related)', strokeDasharray: '5,5' } }, eds));
       storeAddEdge(params.source, params.target, 'related');
     }
   }, [setRfEdges, storeAddEdge]);
@@ -212,6 +209,18 @@ export default function App() {
   const activeGarden = gardens.find(g => g.id === activeGardenId);
   const currentProfile = activeGarden?.profile || 'psychology';
 
+  // Цвета для мини-карты
+  const getMiniMapNodeColor = (node: RFNode) => {
+    switch (node.data.type as NodeType) {
+      case 'question': return '#60a5fa';
+      case 'fact': return '#34d399';
+      case 'assumption': return '#fbbf24';
+      case 'criterion': return '#a78bfa';
+      case 'option': return '#fb923c';
+      default: return '#9ca3af';
+    }
+  };
+
   if (!loaded) return <div style={{ padding: 24 }}>Загрузка…</div>;
   if (!activeGardenId) return <><GardensList onOpenSettings={() => setShowSettings(true)} />{showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}</>;
 
@@ -219,26 +228,26 @@ export default function App() {
     return (
       <div className="scrollable-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 24 }}>
         <div style={{ width: '100%', maxWidth: 640 }}>
-          <button onClick={goToGardens} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', marginBottom: 16 }}>← К садам</button>
+          <button onClick={goToGardens} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', marginBottom: 16 }}>← К садам</button>
           <h1 style={{ fontSize: 32, marginBottom: 8 }}>Вывали всё, что в голове</h1>
-          <p style={{ color: '#888', marginBottom: 16 }}>Не думай о структуре. Просто напиши всё подряд. Нейросеть сама разложит это по полочкам.</p>
+          <p style={{ color: 'var(--muted)', marginBottom: 16 }}>Не думай о структуре. Просто напиши всё подряд. Нейросеть сама разложит это по полочкам.</p>
           
           <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
-            <button onClick={() => setBuildMode('manual')} style={{ flex: 1, padding: '10px', borderRadius: 8, border: buildMode === 'manual' ? '2px solid #111' : '1px solid #ddd', background: buildMode === 'manual' ? '#f9f9f9' : '#fff', cursor: 'pointer', fontWeight: buildMode === 'manual' ? 'bold' : 'normal' }}>🖐 Ручной</button>
-            <button onClick={() => setBuildMode('semi')} style={{ flex: 1, padding: '10px', borderRadius: 8, border: buildMode === 'semi' ? '2px solid #111' : '1px solid #ddd', background: buildMode === 'semi' ? '#f9f9f9' : '#fff', cursor: 'pointer', fontWeight: buildMode === 'semi' ? 'bold' : 'normal' }}>🤝 Полуавтомат</button>
-            <button onClick={() => setBuildMode('auto')} style={{ flex: 1, padding: '10px', borderRadius: 8, border: buildMode === 'auto' ? '2px solid #111' : '1px solid #ddd', background: buildMode === 'auto' ? '#f9f9f9' : '#fff', cursor: 'pointer', fontWeight: buildMode === 'auto' ? 'bold' : 'normal' }}>🚀 Автомат</button>
+            <button onClick={() => setBuildMode('manual')} style={{ flex: 1, padding: '10px', borderRadius: 8, border: buildMode === 'manual' ? '2px solid var(--accent)' : '1px solid var(--border)', background: buildMode === 'manual' ? 'var(--bg)' : 'var(--panel)', color: 'var(--text)', cursor: 'pointer', fontWeight: buildMode === 'manual' ? 'bold' : 'normal' }}>🖐 Ручной</button>
+            <button onClick={() => setBuildMode('semi')} style={{ flex: 1, padding: '10px', borderRadius: 8, border: buildMode === 'semi' ? '2px solid var(--accent)' : '1px solid var(--border)', background: buildMode === 'semi' ? 'var(--bg)' : 'var(--panel)', color: 'var(--text)', cursor: 'pointer', fontWeight: buildMode === 'semi' ? 'bold' : 'normal' }}>🤝 Полуавтомат</button>
+            <button onClick={() => setBuildMode('auto')} style={{ flex: 1, padding: '10px', borderRadius: 8, border: buildMode === 'auto' ? '2px solid var(--accent)' : '1px solid var(--border)', background: buildMode === 'auto' ? 'var(--bg)' : 'var(--panel)', color: 'var(--text)', cursor: 'pointer', fontWeight: buildMode === 'auto' ? 'bold' : 'normal' }}>🚀 Автомат</button>
           </div>
 
           <textarea
             value={brainDump} onChange={(e) => setBrainDump(e.target.value)}
             placeholder="Например: Я выгорел на работе. Начальник постоянно давит..."
-            style={{ width: '100%', minHeight: 160, padding: 12, fontSize: 16, borderRadius: 12, border: '1px solid #ddd', boxSizing: 'border-box', fontFamily: 'inherit', resize: 'vertical' }}
+            style={{ width: '100%', minHeight: 160, padding: 12, fontSize: 16, borderRadius: 12, border: '1px solid var(--border)', background: 'var(--panel)', color: 'var(--text)', boxSizing: 'border-box', fontFamily: 'inherit', resize: 'vertical' }}
           />
           
           {generationError && <div style={{ padding: 12, background: '#fee', color: '#c00', borderRadius: 8, marginTop: 12, fontSize: 14 }}>{generationError}</div>}
 
           <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
-            <button onClick={submitBrainDump} disabled={isGenerating || !brainDump.trim()} style={{ padding: '12px 20px', fontSize: 16, borderRadius: 12, border: 0, background: isGenerating ? '#ccc' : '#111', color: '#fff', cursor: isGenerating ? 'default' : 'pointer', flex: 1, fontWeight: 600 }}>
+            <button onClick={submitBrainDump} disabled={isGenerating || !brainDump.trim()} style={{ padding: '12px 20px', fontSize: 16, borderRadius: 12, border: 0, background: isGenerating ? '#ccc' : 'var(--accent)', color: 'var(--accent-text)', cursor: isGenerating ? 'default' : 'pointer', flex: 1, fontWeight: 600 }}>
               {isGenerating ? 'Строим дерево...' : (buildMode === 'manual' ? 'Добавить мысль' : '✨ Построить дерево')}
             </button>
           </div>
@@ -261,13 +270,16 @@ export default function App() {
         fitViewOptions={{ padding: 0.2 }}
         minZoom={0.05}
       >
-        <Background />
+        <Background color="var(--muted)" gap={20} size={1} />
         <Controls />
-        <MiniMap nodeColor={(n) => (n.style?.background as string) || '#fff'} maskColor='rgba(0,0,0,0.1)' />
+        <MiniMap 
+          nodeColor={getMiniMapNodeColor} 
+          maskColor="rgba(0,0,0,0.1)" 
+          position="bottom-right"
+        />
       </ReactFlow>
 
       <div className="top-bar">
-        {/* Эти кнопки видны всегда */}
         <button className="top-btn mobile-show" onClick={goToGardens}>← К садам</button>
         <button className="top-btn mobile-show" onClick={() => setShowSettings(true)}>⚙️</button>
         
@@ -275,17 +287,15 @@ export default function App() {
           value={buildMode} 
           onChange={(e) => setBuildMode(e.target.value as BuildMode)}
           className="mobile-show"
-          style={{ padding: '8px', borderRadius: 8, border: '1px solid #ddd', background: '#fff', fontSize: 13, cursor: 'pointer', outline: 'none' }}
+          style={{ padding: '8px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--panel)', color: 'var(--text)', fontSize: 13, cursor: 'pointer', outline: 'none' }}
         >
           <option value="manual">🖐 Ручной</option>
           <option value="semi">🤝 Полуавтомат</option>
           <option value="auto">🚀 Автомат</option>
         </select>
 
-        {/* Кнопка мобильного меню */}
         <button className="top-btn mobile-show" onClick={() => setShowMobileMenu(!showMobileMenu)}>⋮ Меню</button>
 
-        {/* Остальные кнопки скрыты на мобилках, но видны на ПК */}
         <button className="top-btn" onClick={() => setShowOriginalText(true)}>📄 Исходник</button>
         <button className="top-btn" onClick={() => { deduplicateNodes(); setTimeout(handleLayout, 100); }} style={{ background: '#fef2f2', color: '#991b1b', borderColor: '#fca5a5' }}>🧹 Очистить</button>
         <button className="top-btn" onClick={handleLayout} style={{ background: '#ecfdf5', color: '#064e3b', borderColor: '#34d399' }}>🌿 Упорядочить</button>
@@ -293,13 +303,11 @@ export default function App() {
         <button className="top-btn" onClick={() => { setShowActionPlan(true); setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); setShowAutoLink(false); }} style={{ background: '#fffbeb', color: '#b45309', borderColor: '#fcd34d' }}>🌾 Урожай</button>
         <button className="top-btn" onClick={() => { setShowAutoLink(true); setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); setShowActionPlan(false); }} style={{ background: '#f0f9ff', color: '#0369a1', borderColor: '#7dd3fc' }}>🔗 Связи</button>
         
-        {/* Главная кнопка видна всегда */}
         <button className="top-btn primary mobile-show" onClick={() => { if(selectedNodeId) handleAddChild(selectedNodeId); else alert('Сначала выбери узел на графе'); }} disabled={isGenerating}>
           {isGenerating ? '...' : '+ Узел'}
         </button>
       </div>
 
-      {/* Мобильное меню (Сетка) */}
       {showMobileMenu && (
         <div className="mobile-menu-overlay">
           <button className="mobile-menu-btn" onClick={() => { setShowOriginalText(true); setShowMobileMenu(false); }}>📄 Исходник</button>
