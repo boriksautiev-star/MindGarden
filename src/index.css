@@ -1,5 +1,4 @@
 :root {
-  /* Классика (по умолчанию) */
   --bg: #fafaf9;
   --panel: #ffffff;
   --text: #111111;
@@ -9,6 +8,11 @@
   --accent-text: #ffffff;
   --radius: 12px;
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* Цвета связей (Классика) */
+  --edge-supports: #10b981;
+  --edge-contradicts: #ef4444;
+  --edge-related: #9ca3af;
 
   /* Цвета узлов (Классика) */
   --node-thought-bg: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
@@ -36,7 +40,7 @@
   --node-option-color: #7c2d12;
 }
 
-/* 🌌 ТЕМА: КОСМОС */
+/* 🌌 ТЕМА: КОСМОС (Планеты и энергия) */
 [data-theme="cosmic"] {
   --bg: #0f172a;
   --panel: #1e293b;
@@ -46,6 +50,10 @@
   --accent: #3b82f6;
   --accent-text: #ffffff;
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  --edge-supports: #34d399;
+  --edge-contradicts: #f87171;
+  --edge-related: #64748b;
 
   --node-thought-bg: rgba(30, 41, 59, 0.9);
   --node-thought-border: #38bdf8;
@@ -72,7 +80,7 @@
   --node-option-color: #ffedd5;
 }
 
-/* 🌿 ТЕМА: ОРГАНИКА */
+/* 🌿 ТЕМА: ОРГАНИКА (Листья и лозы) */
 [data-theme="organic"] {
   --bg: #f2fcf5;
   --panel: #ffffff;
@@ -81,7 +89,11 @@
   --border: #d1fae5;
   --accent: #10b981;
   --accent-text: #ffffff;
-  --shadow: 0 10px 25px rgba(16, 185, 129, 0.1);
+  --shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
+
+  --edge-supports: #059669;
+  --edge-contradicts: #dc2626;
+  --edge-related: #9ca3af;
 
   --node-thought-bg: #ffffff;
   --node-thought-border: #a7f3d0;
@@ -120,89 +132,46 @@ html, body, #root {
 body {
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-.scrollable-page {
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-}
+.scrollable-page { height: 100%; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
 
-/* Панели */
 .side-panel {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 320px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
-  z-index: 1000;
-  color: var(--text);
-  transition: all 0.3s ease;
+  position: absolute; top: 16px; right: 16px; width: 320px; background: var(--panel);
+  border: 1px solid var(--border); border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 100px);
+  overflow-y: auto; z-index: 1000; color: var(--text); transition: all 0.4s ease;
 }
 
-/* Верхняя панель */
 .top-bar {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  display: flex;
-  gap: 8px;
-  z-index: 1000;
-  max-width: calc(100vw - 32px);
-  overflow-x: auto;
-  white-space: nowrap;
-  padding-bottom: 4px;
-  scrollbar-width: none;
+  position: absolute; top: 16px; left: 16px; display: flex; gap: 8px; z-index: 1000;
+  max-width: calc(100vw - 32px); overflow-x: auto; white-space: nowrap;
+  padding-bottom: 4px; scrollbar-width: none;
 }
-
 .top-bar::-webkit-scrollbar { display: none; }
 
 .top-btn {
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--panel);
-  color: var(--text);
-  cursor: pointer;
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  font-size: 14px;
-  white-space: nowrap;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
+  padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--panel); color: var(--text); cursor: pointer; font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 14px; white-space: nowrap;
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
 }
+.top-btn.primary { background: var(--accent); color: var(--accent-text); border: 0; }
 
-.top-btn.primary {
-  background: var(--accent);
-  color: var(--accent-text);
-  border: 0;
-}
-
-/* Компонент Узла */
+/* === БАЗОВЫЙ УЗЕЛ === */
 .thought-node {
   padding: 16px 20px;
-  border-radius: 24px 24px 24px 4px;
   min-width: 160px;
   max-width: 260px;
   text-align: center;
   font-size: 14px;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   box-sizing: border-box;
+  /* Классическая форма */
+  border-radius: 24px 24px 24px 4px; 
 }
 
 .thought-node.is-root {
@@ -216,16 +185,8 @@ body {
   z-index: 10;
 }
 
-.thought-node.is-resolved {
-  opacity: 0.6;
-  filter: grayscale(80%);
-  text-decoration: line-through;
-}
-
-.thought-node.is-deferred {
-  opacity: 0.7;
-  border-style: dashed !important;
-}
+.thought-node.is-resolved { opacity: 0.6; filter: grayscale(80%); text-decoration: line-through; }
+.thought-node.is-deferred { opacity: 0.7; border-style: dashed !important; }
 
 /* Типы узлов */
 .type-thought { background: var(--node-thought-bg); border: 2px solid var(--node-thought-border); color: var(--node-thought-color); }
@@ -235,73 +196,65 @@ body {
 .type-criterion { background: var(--node-criterion-bg); border: 2px solid var(--node-criterion-border); color: var(--node-criterion-color); }
 .type-option { background: var(--node-option-bg); border: 2px solid var(--node-option-border); color: var(--node-option-color); }
 
-/* Анимации для Космоса */
+
+/* === 🌌 КОСМОС (Круглые планеты) === */
 [data-theme="cosmic"] .thought-node {
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+  border-radius: 50%; /* Идеальный круг */
+  aspect-ratio: 1; /* Делаем квадрат, чтобы круг не сплющивался */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 16px;
+  box-shadow: 0 0 20px var(--node-thought-border);
+  animation: pulse 4s infinite alternate;
 }
-[data-theme="cosmic"] .thought-node.type-thought { box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
-[data-theme="cosmic"] .thought-node.type-fact { box-shadow: 0 0 15px rgba(52, 211, 153, 0.3); }
+[data-theme="cosmic"] .thought-node.type-question { box-shadow: 0 0 20px var(--node-question-border); }
+[data-theme="cosmic"] .thought-node.type-fact { box-shadow: 0 0 20px var(--node-fact-border); }
+[data-theme="cosmic"] .thought-node.type-option { box-shadow: 0 0 20px var(--node-option-border); }
 
-/* Скругления для Органики */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.03); }
+}
+
+
+/* === 🌿 ОРГАНИКА (Форма листа) === */
 [data-theme="organic"] .thought-node {
-  border-radius: 30px 30px 30px 30px;
+  /* Форма капли/листа */
+  border-radius: 50% 50% 50% 4px; 
+  border-width: 3px;
 }
 
-/* React Flow настройки под темы */
-.react-flow__background { background-color: var(--bg) !important; }
-[data-theme="cosmic"] .react-flow__background pattern circle { fill: #334155 !important; }
-[data-theme="cosmic"] .react-flow__controls-button { background: var(--panel) !important; fill: var(--text) !important; border-bottom: 1px solid var(--border) !important; }
-[data-theme="cosmic"] .react-flow__controls-button:hover { background: var(--border) !important; }
+
+/* Анимация линий (Связи) */
+.react-flow__edge-path {
+  transition: stroke 0.4s ease, stroke-width 0.3s ease;
+}
+
+/* В Космосе линии пульсируют, как энергия */
+[data-theme="cosmic"] .react-flow__edge-path {
+  stroke-width: 3px;
+  stroke-dasharray: 8 4;
+  animation: energyFlow 1.5s linear infinite;
+}
+
+@keyframes energyFlow {
+  from { stroke-dashoffset: 24; }
+  to { stroke-dashoffset: 0; }
+}
 
 /* Мобильная версия */
 @media (max-width: 768px) {
-  .side-panel {
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    border-radius: 20px 20px 0 0;
-    max-height: 85vh;
-    padding: 20px;
-    padding-bottom: calc(20px + env(safe-area-inset-bottom, 20px));
-    box-sizing: border-box;
-  }
-  .top-bar {
-    top: 8px;
-    left: 8px;
-    right: 8px;
-    gap: 6px;
-    max-width: none;
-  }
+  .side-panel { top: auto; bottom: 0; left: 0; right: 0; width: 100%; border-radius: 20px 20px 0 0; max-height: 85vh; padding: 20px; padding-bottom: calc(20px + env(safe-area-inset-bottom, 20px)); box-sizing: border-box; }
+  .top-bar { top: 8px; left: 8px; right: 8px; gap: 6px; max-width: none; }
   .top-btn { padding: 8px 12px; font-size: 13px; display: none; }
   .top-btn.mobile-show { display: flex; }
 }
 
 .mobile-menu-overlay {
-  position: absolute;
-  top: 60px;
-  left: 12px;
-  right: 12px;
-  background: var(--panel);
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: var(--shadow);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  z-index: 2000;
-  border: 1px solid var(--border);
+  position: absolute; top: 60px; left: 12px; right: 12px; background: var(--panel);
+  border-radius: 16px; padding: 16px; box-shadow: var(--shadow); display: grid;
+  grid-template-columns: 1fr 1fr; gap: 12px; z-index: 2000; border: 1px solid var(--border);
 }
-
-.mobile-menu-btn {
-  padding: 12px 8px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  text-align: center;
-}
+.mobile-menu-btn { padding: 12px 8px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; text-align: center; }

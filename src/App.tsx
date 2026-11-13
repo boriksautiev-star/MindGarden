@@ -175,7 +175,7 @@ export default function App() {
       const isDimmed = selectedNodeId !== null && !pathEdges.has(e.id);
       return { 
         id: e.id, type: 'custom', source: e.source, target: e.target, animated: e.type === 'related' && !isDimmed,
-        style: { stroke: isContradicts ? '#ef4444' : isSupports ? '#10b981' : '#9ca3af', strokeWidth: 2, strokeDasharray: e.type === 'related' ? '5,5' : 'none', opacity: isDimmed ? 0.1 : 1, transition: 'opacity 0.2s ease' } 
+        style: { stroke: isContradicts ? 'var(--edge-contradicts)' : isSupports ? 'var(--edge-supports)' : 'var(--edge-related)', strokeWidth: 2, strokeDasharray: e.type === 'related' ? '5,5' : 'none', opacity: isDimmed ? 0.1 : 1, transition: 'opacity 0.2s ease' } 
       };
     }));
   }, [visibleEdges, selectedNodeId, pathEdges, setRfEdges]);
