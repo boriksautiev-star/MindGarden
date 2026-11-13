@@ -1,4 +1,4 @@
-import type { Settings, AgentResponse, AgentMode, GraphAnalysisResponse, AIProfile, ChatMessage, GraphInitialResponse, BuildMode, ThoughtNode } from './types';
+import type { Settings, AgentResponse, AgentMode, GraphAnalysisResponse, AIProfile, ChatMessage, GraphInitialResponse, BuildMode, ThoughtNode, EdgeType } from './types';
 
 function generateUUID() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -146,7 +146,7 @@ export async function analyzeGraph(nodes: any[], edges: any[], settings: Setting
   if (nodes.length === 0) return { error: 'Граф пуст.' };
 
   const nodesText = nodes.map(n => `[ID: ${n.id}] [Тип: ${n.type}] ${n.label}`).join('\n');
-  const edgesText = edges.map(e => `[От: ${e.source}] -> [К: ${e.target}]`).join('\n');
+  const edgesText = edges.map(e => `[От: ${e.source}] -> [К: ${e.target}] (${e.type})`).join('\n');
   
   const sysPrompt = `Ты — мудрый садовник мыслей. Профиль: ${PROFILE_PROMPTS[profile]}.
 Найди "белые пятна" и предложи 3-4 НОВЫХ узла. 
@@ -305,6 +305,58 @@ ${context}
       if (res.status === 429) throw new Error('Слишком много запросов к GigaChat. Пожалуйста, подождите 1-2 минуты.');
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return (await res.json()).choices[0].message.content;
+    }
+    return { error: 'Пока поддерживается только GigaChat' };
+  } catch (err: any) {
+    return { error: `${err.message}` };
+  }
+}
+
+export async function findMissingLinks(
+  nodes: ThoughtNode[],
+  edges: any[],
+  settings: Settings | null
+): Promise<{ links: { source: string; target: string; relation: EdgeType }[] } | { error: string }> {
+  if (!settings || !settings.apiKey) return { error: 'Ключ не настроен.' };
+  if (nodes.length < 2) return { error: 'Слишком мало узлов для поиска связей.' };
+
+  const { provider, apiKey } = settings;
+  const nodesText = nodes.map(n => `[ID: ${n.id}] ${n.label}`).join('\n');
+  const edgesText = edges.map(e => `${e.source} -> ${e.target}`).join('\n');
+
+  const sysPrompt = `Ты — аналитик данных. Перед тобой граф мыслей.
+Твоя задача — найти логические связи между узлами, которые ЕЩЕ НЕ СОЕДИНЕНЫ.
+Например, один факт опровергает другой (contradicts), или один вариант поддерживает критерий (supports), или просто они тесно связаны по смыслу (related).
+
+УЗЛЫ:
+${nodesText}
+
+ТЕКУЩИЕ СВЯЗИ (не предлагай их повторно):
+${edgesText}
+
+Предложи до 5 новых связей. Ответ строго в формате JSON:
+{
+  "links": [
+    { "source": "id_откуда", "target": "id_куда", "relation": "supports|contradicts|related" }
+  ]
+}`;
+
+  try {
+    if (provider === 'gigachat') {
+      const tokenRes = await fetch('/gigachat-auth/api/v2/oauth', {
+        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json', 'RqUID': generateUUID(), 'Authorization': `Basic ${apiKey}` },
+        body: 'scope=GIGACHAT_API_PERS'
+      });
+      if (!tokenRes.ok) throw new Error(`Auth: ${tokenRes.status}`);
+      const token = (await tokenRes.json()).access_token;
+      
+      const res = await fetch('/gigachat-api/v1/chat/completions', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt + '\n\nВАЖНО: Верни ответ ТОЛЬКО в виде валидного JSON.' }, { role: 'user', content: 'Найди связи.' }] })
+      });
+      if (res.status === 429) throw new Error('Слишком много запросов к GigaChat. Пожалуйста, подождите 1-2 минуты.');
+      if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
+      return extractJSON((await res.json()).choices[0].message.content);
     }
     return { error: 'Пока поддерживается только GigaChat' };
   } catch (err: any) {
