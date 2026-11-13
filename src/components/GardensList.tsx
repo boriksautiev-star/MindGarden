@@ -44,15 +44,15 @@ export function GardensList({ onOpenSettings }: { onOpenSettings: () => void }) 
   };
 
   return (
-    <div style={{ minHeight: '100dvh', background: 'var(--bg)', padding: '40px 24px' }}>
+    <div className="scrollable-page" style={{ background: 'var(--bg)', padding: '32px 16px' }}>
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, flexWrap: 'wrap', gap: 16 }}>
           <h1 style={{ fontSize: 32, margin: 0 }}>Мои сады</h1>
           <div style={{ display: 'flex', gap: 8 }}>
             <button onClick={handleExport} title="Скачать все данные" style={{ background: 'none', border: '1px solid #ddd', padding: '6px 12px', borderRadius: 8, cursor: 'pointer', fontSize: 14 }}>📥 Экспорт</button>
             <button onClick={() => fileInputRef.current?.click()} title="Загрузить из файла" style={{ background: 'none', border: '1px solid #ddd', padding: '6px 12px', borderRadius: 8, cursor: 'pointer', fontSize: 14 }}>📤 Импорт</button>
-            <button onClick={onOpenSettings} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 24 }}>⚙️</button>
+            <button onClick={onOpenSettings} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 24, padding: '0 4px' }}>⚙️</button>
           </div>
         </div>
 
@@ -73,13 +73,13 @@ export function GardensList({ onOpenSettings }: { onOpenSettings: () => void }) 
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16 }}>
                 <span style={{ fontSize: 12, color: '#888' }}>{new Date(g.createdAt).toLocaleDateString('ru-RU')}</span>
-                <button onClick={(e) => { e.stopPropagation(); deleteGarden(g.id); }} style={{ background: 'none', border: 'none', cursor: 'pointer', opacity: 0.5 }} title="Удалить сад">🗑</button>
+                <button onClick={(e) => { e.stopPropagation(); deleteGarden(g.id); }} style={{ background: 'none', border: 'none', cursor: 'pointer', opacity: 0.5, padding: 4 }} title="Удалить сад">🗑</button>
               </div>
             </div>
           ))}
         </div>
       </div>
-      
+
       {showCreate && <CreateGardenModal onClose={() => setShowCreate(false)} />}
     </div>
   );

@@ -23,7 +23,15 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Панели (Агент и Инспектор) */
+/* Класс для страниц, которым нужен скролл (например, список садов) */
+.scrollable-page {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+}
+
+/* Панели (Агент, Инспектор, Анализ и т.д.) */
 .side-panel {
   position: absolute;
   top: 16px;
@@ -50,8 +58,17 @@ body {
   display: flex;
   gap: 8px;
   z-index: 1000;
-  flex-wrap: wrap;
   max-width: calc(100vw - 32px);
+  /* Делаем горизонтальный скролл для кнопок на узких экранах */
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+
+.top-bar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari - скрываем полосу прокрутки */
 }
 
 .top-btn {
@@ -64,6 +81,7 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   font-size: 14px;
   white-space: nowrap;
+  flex-shrink: 0; /* Запрещаем кнопкам сжиматься */
 }
 
 .top-btn.primary {
@@ -81,16 +99,16 @@ body {
     right: 0;
     width: 100%;
     border-radius: 20px 20px 0 0;
-    max-height: 60vh;
+    max-height: 80vh; /* Увеличили высоту для удобства чтения */
     padding: 20px;
-    /* Отступ для системных кнопок Android/iOS */
     padding-bottom: calc(20px + env(safe-area-inset-bottom, 20px));
     box-sizing: border-box;
   }
   .top-bar {
-    top: 12px;
-    left: 12px;
+    top: 8px;
+    left: 8px;
     gap: 6px;
+    max-width: calc(100vw - 16px);
   }
   .top-btn {
     padding: 8px 12px;
