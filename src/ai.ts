@@ -1,4 +1,4 @@
-import type { Settings, AgentResponse, AgentMode, GraphAnalysisResponse, AIProfile, ChatMessage, GraphInitialResponse, BuildMode } from './types';
+import type { Settings, AgentResponse, AgentMode, GraphAnalysisResponse, AIProfile, ChatMessage, GraphInitialResponse, BuildMode, ThoughtNode } from './types';
 
 function generateUUID() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -95,7 +95,6 @@ export async function generateInitialTree(text: string, settings: Settings | nul
 
   let treeSizePrompt = "Создай 4-7 узлов.";
   if (buildMode === 'auto') {
-    // ЖЕСТКОЕ ОГРАНИЧЕНИЕ: Ровно 10 узлов
     treeSizePrompt = `Создай дерево РОВНО ИЗ 10 УЗЛОВ (не больше и не меньше). 
 Структура должна быть такой:
 - 1 корневой узел (главная мысль).
@@ -225,6 +224,7 @@ export async function getNodeInsight(
     return `Ошибка: ${err.message}`;
   }
 }
+
 export async function expandNode(
   parentLabel: string, 
   settings: Settings | null, 
@@ -259,6 +259,46 @@ export async function expandNode(
       });
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return extractJSON((await res.json()).choices[0].message.content);
+    }
+    return { error: 'Пока поддерживается только GigaChat' };
+  } catch (err: any) {
+    return { error: `Ошибка: ${err.message}` };
+  }
+}
+
+export async function generateActionPlan(
+  nodes: ThoughtNode[],
+  settings: Settings | null,
+  profile: AIProfile
+): Promise<string | { error: string }> {
+  if (!settings || !settings.apiKey) return { error: 'Ключ не настроен.' };
+  if (nodes.length === 0) return { error: 'Нет решенных мыслей или вариантов для плана.' };
+
+  const { provider, apiKey } = settings;
+  const context = nodes.map(n => `- [${n.type}] ${n.label}`).join('\n');
+  
+  const sysPrompt = `Ты — мудрый садовник мыслей и эксперт по планированию. Профиль: ${PROFILE_PROMPTS[profile]}.
+Пользователь собрал "урожай" из своего сада мыслей. Вот его решенные идеи и выбранные варианты:
+${context}
+
+Твоя задача — составить из этого четкий, практический пошаговый план действий (To-Do List). 
+Выдели самые важные шаги. Пиши кратко, по делу, с эмодзи для наглядности. Не используй сложные термины.`;
+
+  try {
+    if (provider === 'gigachat') {
+      const tokenRes = await fetch('/gigachat-auth/api/v2/oauth', {
+        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json', 'RqUID': generateUUID(), 'Authorization': `Basic ${apiKey}` },
+        body: 'scope=GIGACHAT_API_PERS'
+      });
+      if (!tokenRes.ok) throw new Error(`Auth: ${tokenRes.status}`);
+      const token = (await tokenRes.json()).access_token;
+      
+      const res = await fetch('/gigachat-api/v1/chat/completions', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: 'Составь план действий.' }] })
+      });
+      if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
+      return (await res.json()).choices[0].message.content;
     }
     return { error: 'Пока поддерживается только GigaChat' };
   } catch (err: any) {

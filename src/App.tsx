@@ -11,6 +11,7 @@ import { ThoughtEdge } from './components/ThoughtEdge';
 import { GardensList } from './components/GardensList';
 import { GraphAnalyzerPanel } from './components/GraphAnalyzerPanel';
 import { OriginalTextModal } from './components/OriginalTextModal';
+import { ActionPlanModal } from './components/ActionPlanModal';
 import { generateInitialTree, expandNode } from './ai';
 import type { BuildMode } from './types';
 
@@ -36,6 +37,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showGraphAnalyzer, setShowGraphAnalyzer] = useState(false);
   const [showOriginalText, setShowOriginalText] = useState(false);
+  const [showActionPlan, setShowActionPlan] = useState(false);
 
   useEffect(() => { loadInitial(); }, [loadInitial]);
 
@@ -77,7 +79,6 @@ export default function App() {
     return { pathNodes: visitedNodes, pathEdges: visitedEdges };
   }, [selectedNodeId, visibleEdges]);
 
-  // ИСПРАВЛЕНИЕ: handleLayout больше не зависит от rfNodes/rfEdges, использует стор напрямую
   const handleLayout = useCallback(() => {
     const currentNodes = useStore.getState().nodes;
     const currentEdges = useStore.getState().edges;
@@ -236,9 +237,9 @@ export default function App() {
         nodes={rfNodes} edges={rfEdges} 
         onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} onEdgesDelete={onEdgesDelete} 
         onNodeDragStop={(_, node) => updatePosition(node.id, node.position.x, node.position.y)} 
-        onNodeClick={(_, node) => { setSelectedNodeId(node.id); setAgentContext(null); setShowGraphAnalyzer(false); }} 
+        onNodeClick={(_, node) => { setSelectedNodeId(node.id); setAgentContext(null); setShowGraphAnalyzer(false); setShowActionPlan(false); }} 
         onEdgeClick={() => { setSelectedNodeId(null); setAgentContext(null); }} 
-        onPaneClick={() => { setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); }} 
+        onPaneClick={() => { setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); setShowActionPlan(false); }} 
         nodeTypes={nodeTypes} edgeTypes={edgeTypes} elevateEdgesOnSelect={true} fitView
       >
         <Background />
@@ -262,7 +263,8 @@ export default function App() {
         <button className="top-btn" onClick={() => setShowOriginalText(true)}>📄 Исходник</button>
         <button className="top-btn" onClick={() => { deduplicateNodes(); setTimeout(handleLayout, 100); }} style={{ background: '#fef2f2', color: '#991b1b', borderColor: '#fca5a5' }}>🧹 Очистить</button>
         <button className="top-btn" onClick={handleLayout} style={{ background: '#ecfdf5', color: '#064e3b', borderColor: '#34d399' }}>🌿 Упорядочить</button>
-        <button className="top-btn" onClick={() => { setShowGraphAnalyzer(true); setSelectedNodeId(null); setAgentContext(null); }} style={{ background: '#f5f3ff', color: '#4c1d95', borderColor: '#a78bfa' }}>✨ Анализ</button>
+        <button className="top-btn" onClick={() => { setShowGraphAnalyzer(true); setSelectedNodeId(null); setAgentContext(null); setShowActionPlan(false); }} style={{ background: '#f5f3ff', color: '#4c1d95', borderColor: '#a78bfa' }}>✨ Анализ</button>
+        <button className="top-btn" onClick={() => { setShowActionPlan(true); setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); }} style={{ background: '#fffbeb', color: '#b45309', borderColor: '#fcd34d' }}>🌾 Урожай</button>
         
         <button className="top-btn primary" onClick={() => { if(selectedNodeId) handleAddChild(selectedNodeId); else alert('Сначала выбери узел на графе'); }} disabled={isGenerating}>
           {isGenerating ? '...' : '+ Узел'}
@@ -284,6 +286,7 @@ export default function App() {
       {agentContext && <AgentPanel initialText={agentContext.text} sourceNodeId={agentContext.sourceId} profile={currentProfile} onClose={() => setAgentContext(null)} />}
       {showGraphAnalyzer && <GraphAnalyzerPanel profile={currentProfile} onClose={() => setShowGraphAnalyzer(false)} />}
       {showOriginalText && <OriginalTextModal onClose={() => setShowOriginalText(false)} />}
+      {showActionPlan && <ActionPlanModal profile={currentProfile} onClose={() => setShowActionPlan(false)} />}
       {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
     </div>
   );
