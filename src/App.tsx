@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
-import { ReactFlow, Background, Controls, useNodesState, useEdgesState, addEdge, type Node as RFNode, type Edge as RFEdge, type Connection } from '@xyflow/react';
+import { ReactFlow, Background, Controls, MiniMap, useNodesState, useEdgesState, addEdge, type Node as RFNode, type Edge as RFEdge, type Connection } from '@xyflow/react';
 import dagre from 'dagre';
 import '@xyflow/react/dist/style.css';
 import { useStore } from './store';
@@ -103,7 +103,7 @@ export default function App() {
       const dagreGraph = new dagre.graphlib.Graph();
       dagreGraph.setDefaultEdgeLabel(() => ({}));
       // Уменьшили отступы для более компактного графа
-      dagreGraph.setGraph({ rankdir: 'TB', nodesep: 40, ranksep: 60 }); 
+      dagreGraph.setGraph({ rankdir: 'TB', nodesep: 30, ranksep: 50 }); 
       
       currentNodes.forEach((node) => dagreGraph.setNode(node.id, { width: 200, height: 80 }));
       currentEdges.forEach((edge) => dagreGraph.setEdge(edge.source, edge.target));
@@ -263,6 +263,7 @@ export default function App() {
       >
         <Background />
         <Controls />
+        <MiniMap nodeColor={(n) => (n.style?.background as string) || '#fff'} maskColor='rgba(0,0,0,0.1)' />
       </ReactFlow>
 
       <div className="top-bar">

@@ -9,12 +9,10 @@
   --radius: 12px;
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
-  /* Цвета связей (Классика) */
   --edge-supports: #10b981;
   --edge-contradicts: #ef4444;
   --edge-related: #9ca3af;
 
-  /* Цвета узлов (Классика) */
   --node-thought-bg: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
   --node-thought-border: #d1d5db;
   --node-thought-color: #111827;
@@ -40,101 +38,30 @@
   --node-option-color: #7c2d12;
 }
 
-/* 🌌 ТЕМА: КОСМОС (Планеты и энергия) */
 [data-theme="cosmic"] {
-  --bg: #0f172a;
-  --panel: #1e293b;
-  --text: #f8fafc;
-  --muted: #94a3b8;
-  --border: #334155;
-  --accent: #3b82f6;
-  --accent-text: #ffffff;
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-
-  --edge-supports: #34d399;
-  --edge-contradicts: #f87171;
-  --edge-related: #64748b;
-
-  --node-thought-bg: rgba(30, 41, 59, 0.9);
-  --node-thought-border: #38bdf8;
-  --node-thought-color: #e0f2fe;
-  
-  --node-question-bg: rgba(30, 41, 59, 0.9);
-  --node-question-border: #818cf8;
-  --node-question-color: #e0e7ff;
-  
-  --node-fact-bg: rgba(30, 41, 59, 0.9);
-  --node-fact-border: #34d399;
-  --node-fact-color: #d1fae5;
-  
-  --node-assumption-bg: rgba(30, 41, 59, 0.9);
-  --node-assumption-border: #fbbf24;
-  --node-assumption-color: #fef3c7;
-  
-  --node-criterion-bg: rgba(30, 41, 59, 0.9);
-  --node-criterion-border: #c084fc;
-  --node-criterion-color: #f3e8ff;
-  
-  --node-option-bg: rgba(30, 41, 59, 0.9);
-  --node-option-border: #fb923c;
-  --node-option-color: #ffedd5;
+  --bg: #0f172a; --panel: #1e293b; --text: #f8fafc; --muted: #94a3b8; --border: #334155; --accent: #3b82f6; --accent-text: #ffffff; --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --edge-supports: #34d399; --edge-contradicts: #f87171; --edge-related: #64748b;
+  --node-thought-bg: rgba(30, 41, 59, 0.9); --node-thought-border: #38bdf8; --node-thought-color: #e0f2fe;
+  --node-question-bg: rgba(30, 41, 59, 0.9); --node-question-border: #818cf8; --node-question-color: #e0e7ff;
+  --node-fact-bg: rgba(30, 41, 59, 0.9); --node-fact-border: #34d399; --node-fact-color: #d1fae5;
+  --node-assumption-bg: rgba(30, 41, 59, 0.9); --node-assumption-border: #fbbf24; --node-assumption-color: #fef3c7;
+  --node-criterion-bg: rgba(30, 41, 59, 0.9); --node-criterion-border: #c084fc; --node-criterion-color: #f3e8ff;
+  --node-option-bg: rgba(30, 41, 59, 0.9); --node-option-border: #fb923c; --node-option-color: #ffedd5;
 }
 
-/* 🌿 ТЕМА: ОРГАНИКА (Листья и лозы) */
 [data-theme="organic"] {
-  --bg: #f2fcf5;
-  --panel: #ffffff;
-  --text: #064e3b;
-  --muted: #64748b;
-  --border: #d1fae5;
-  --accent: #10b981;
-  --accent-text: #ffffff;
-  --shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
-
-  --edge-supports: #059669;
-  --edge-contradicts: #dc2626;
-  --edge-related: #9ca3af;
-
-  --node-thought-bg: #ffffff;
-  --node-thought-border: #a7f3d0;
-  --node-thought-color: #064e3b;
-  
-  --node-question-bg: #eff6ff;
-  --node-question-border: #93c5fd;
-  --node-question-color: #1e3a8a;
-  
-  --node-fact-bg: #ecfdf5;
-  --node-fact-border: #6ee7b7;
-  --node-fact-color: #064e3b;
-  
-  --node-assumption-bg: #fffbeb;
-  --node-assumption-border: #fde68a;
-  --node-assumption-color: #78350f;
-  
-  --node-criterion-bg: #f5f3ff;
-  --node-criterion-border: #c4b5fd;
-  --node-criterion-color: #4c1d95;
-  
-  --node-option-bg: #fff7ed;
-  --node-option-border: #fdba74;
-  --node-option-color: #7c2d12;
+  --bg: #f2fcf5; --panel: #ffffff; --text: #064e3b; --muted: #64748b; --border: #d1fae5; --accent: #10b981; --accent-text: #ffffff; --shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
+  --edge-supports: #059669; --edge-contradicts: #dc2626; --edge-related: #9ca3af;
+  --node-thought-bg: #ffffff; --node-thought-border: #a7f3d0; --node-thought-color: #064e3b;
+  --node-question-bg: #eff6ff; --node-question-border: #93c5fd; --node-question-color: #1e3a8a;
+  --node-fact-bg: #ecfdf5; --node-fact-border: #6ee7b7; --node-fact-color: #064e3b;
+  --node-assumption-bg: #fffbeb; --node-assumption-border: #fde68a; --node-assumption-color: #78350f;
+  --node-criterion-bg: #f5f3ff; --node-criterion-border: #c4b5fd; --node-criterion-color: #4c1d95;
+  --node-option-bg: #fff7ed; --node-option-border: #fdba74; --node-option-color: #7c2d12;
 }
 
-/* Базовые стили */
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-  background-color: var(--bg);
-  color: var(--text);
-}
-
-body {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.4s ease, color 0.4s ease;
-}
-
+html, body, #root { height: 100%; margin: 0; overflow: hidden; background-color: var(--bg); color: var(--text); }
+body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; transition: background-color 0.4s ease, color 0.4s ease; }
 .scrollable-page { height: 100%; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
 
 .side-panel {
@@ -144,51 +71,17 @@ body {
   overflow-y: auto; z-index: 1000; color: var(--text); transition: all 0.4s ease;
 }
 
-.top-bar {
-  position: absolute; top: 16px; left: 16px; display: flex; gap: 8px; z-index: 1000;
-  max-width: calc(100vw - 32px); overflow-x: auto; white-space: nowrap;
-  padding-bottom: 4px; scrollbar-width: none;
-}
+.top-bar { position: absolute; top: 16px; left: 16px; display: flex; gap: 8px; z-index: 1000; max-width: calc(100vw - 32px); overflow-x: auto; white-space: nowrap; padding-bottom: 4px; scrollbar-width: none; }
 .top-bar::-webkit-scrollbar { display: none; }
-
-.top-btn {
-  padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
-  background: var(--panel); color: var(--text); cursor: pointer; font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 14px; white-space: nowrap;
-  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  transition: all 0.3s;
-}
+.top-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); color: var(--text); cursor: pointer; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 14px; white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
 .top-btn.primary { background: var(--accent); color: var(--accent-text); border: 0; }
 
-/* === БАЗОВЫЙ УЗЕЛ === */
-.thought-node {
-  padding: 16px 20px;
-  min-width: 160px;
-  max-width: 260px;
-  text-align: center;
-  font-size: 14px;
-  position: relative;
-  transition: all 0.4s ease;
-  box-sizing: border-box;
-  /* Классическая форма */
-  border-radius: 24px 24px 24px 4px; 
-}
-
-.thought-node.is-root {
-  border-width: 3px !important;
-  border-color: #eab308 !important;
-  box-shadow: 0 0 15px rgba(234, 179, 8, 0.4) !important;
-}
-
-.thought-node.is-selected {
-  box-shadow: 0 0 0 3px var(--accent), var(--shadow) !important;
-  z-index: 10;
-}
-
+.thought-node { padding: 16px 20px; min-width: 160px; max-width: 260px; text-align: center; font-size: 14px; position: relative; transition: all 0.4s ease; box-sizing: border-box; border-radius: 24px 24px 24px 4px; }
+.thought-node.is-root { border-width: 3px !important; border-color: #eab308 !important; box-shadow: 0 0 15px rgba(234, 179, 8, 0.4) !important; }
+.thought-node.is-selected { box-shadow: 0 0 0 3px var(--accent), var(--shadow) !important; z-index: 10; }
 .thought-node.is-resolved { opacity: 0.6; filter: grayscale(80%); text-decoration: line-through; }
 .thought-node.is-deferred { opacity: 0.7; border-style: dashed !important; }
 
-/* Типы узлов */
 .type-thought { background: var(--node-thought-bg); border: 2px solid var(--node-thought-border); color: var(--node-thought-color); }
 .type-question { background: var(--node-question-bg); border: 2px solid var(--node-question-border); color: var(--node-question-color); }
 .type-fact { background: var(--node-fact-bg); border: 2px solid var(--node-fact-border); color: var(--node-fact-color); }
@@ -196,60 +89,43 @@ body {
 .type-criterion { background: var(--node-criterion-bg); border: 2px solid var(--node-criterion-border); color: var(--node-criterion-color); }
 .type-option { background: var(--node-option-bg); border: 2px solid var(--node-option-border); color: var(--node-option-color); }
 
-
-/* === 🌌 КОСМОС (Круглые планеты) === */
-[data-theme="cosmic"] .thought-node {
-  border-radius: 50%; /* Идеальный круг */
-  aspect-ratio: 1; /* Делаем квадрат, чтобы круг не сплющивался */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 24px 16px;
-  box-shadow: 0 0 20px var(--node-thought-border);
-  animation: pulse 4s infinite alternate;
-}
+[data-theme="cosmic"] .thought-node { border-radius: 50%; aspect-ratio: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px 16px; box-shadow: 0 0 20px var(--node-thought-border); animation: pulse 4s infinite alternate; }
 [data-theme="cosmic"] .thought-node.type-question { box-shadow: 0 0 20px var(--node-question-border); }
 [data-theme="cosmic"] .thought-node.type-fact { box-shadow: 0 0 20px var(--node-fact-border); }
 [data-theme="cosmic"] .thought-node.type-option { box-shadow: 0 0 20px var(--node-option-border); }
+@keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.03); } }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.03); }
+[data-theme="organic"] .thought-node { border-radius: 50% 50% 50% 4px; border-width: 3px; }
+
+.react-flow__edge-path { transition: stroke 0.4s ease, stroke-width 0.3s ease; }
+[data-theme="cosmic"] .react-flow__edge-path { stroke-width: 3px; stroke-dasharray: 8 4; animation: energyFlow 1.5s linear infinite; }
+@keyframes energyFlow { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
+
+/* Настройки MiniMap */
+.react-flow__minimap {
+  border-radius: 12px !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
+  background-color: var(--panel) !important;
+  overflow: hidden;
+}
+[data-theme="cosmic"] .react-flow__minimap-mask {
+  fill: rgba(0, 0, 0, 0.5) !important;
 }
 
-
-/* === 🌿 ОРГАНИКА (Форма листа) === */
-[data-theme="organic"] .thought-node {
-  /* Форма капли/листа */
-  border-radius: 50% 50% 50% 4px; 
-  border-width: 3px;
-}
-
-
-/* Анимация линий (Связи) */
-.react-flow__edge-path {
-  transition: stroke 0.4s ease, stroke-width 0.3s ease;
-}
-
-/* В Космосе линии пульсируют, как энергия */
-[data-theme="cosmic"] .react-flow__edge-path {
-  stroke-width: 3px;
-  stroke-dasharray: 8 4;
-  animation: energyFlow 1.5s linear infinite;
-}
-
-@keyframes energyFlow {
-  from { stroke-dashoffset: 24; }
-  to { stroke-dashoffset: 0; }
-}
-
-/* Мобильная версия */
 @media (max-width: 768px) {
   .side-panel { top: auto; bottom: 0; left: 0; right: 0; width: 100%; border-radius: 20px 20px 0 0; max-height: 85vh; padding: 20px; padding-bottom: calc(20px + env(safe-area-inset-bottom, 20px)); box-sizing: border-box; }
   .top-bar { top: 8px; left: 8px; right: 8px; gap: 6px; max-width: none; }
   .top-btn { padding: 8px 12px; font-size: 13px; display: none; }
   .top-btn.mobile-show { display: flex; }
+  
+  /* Прячем миникарту на мобилках, чтобы не мешала, или делаем её маленькой */
+  .react-flow__minimap {
+    width: 100px !important;
+    height: 80px !important;
+    bottom: 16px !important;
+    right: 16px !important;
+  }
 }
 
 .mobile-menu-overlay {
