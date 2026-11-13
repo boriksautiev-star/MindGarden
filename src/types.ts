@@ -45,6 +45,7 @@ export interface Settings {
   id: 'app-settings';
   provider: Provider;
   apiKey: string;
+  theme?: 'classic' | 'cosmic' | 'organic';
 }
 
 export type AgentMode = 'clarify' | 'assumptions' | 'critique' | 'options';

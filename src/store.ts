@@ -31,7 +31,7 @@ interface Store {
   addEdge: (source: string, target: string, type?: EdgeType) => Promise<void>;
   deleteEdge: (id: string) => Promise<void>;
   
-  saveSettings: (provider: string, apiKey: string) => Promise<void>;
+  saveSettings: (provider: string, apiKey: string, theme?: string) => Promise<void>;
   exportData: () => Promise<string>;
   importData: (json: string) => Promise<void>;
 }
@@ -286,8 +286,8 @@ export const useStore = create<Store>((set, get) => ({
     await db.edges.put(edge); set({ edges: [...get().edges, edge] });
   },
   deleteEdge: async (id) => { await db.edges.delete(id); set({ edges: get().edges.filter(e => e.id !== id) }); },
-  saveSettings: async (provider, apiKey) => {
-    const settings: Settings = { id: 'app-settings', provider: provider as any, apiKey };
+  saveSettings: async (provider, apiKey, theme = 'classic') => {
+    const settings: Settings = { id: 'app-settings', provider: provider as any, apiKey, theme: theme as any };
     await db.settings.put(settings); set({ settings });
   },
   exportData: async () => {

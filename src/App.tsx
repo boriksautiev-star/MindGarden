@@ -48,6 +48,14 @@ export default function App() {
 
   useEffect(() => { loadInitial(); }, [loadInitial]);
 
+  useEffect(() => {
+    if (settings?.theme) {
+      document.documentElement.setAttribute('data-theme', settings.theme);
+    } else {
+      document.documentElement.setAttribute('data-theme', 'classic');
+    }
+  }, [settings?.theme]);
+
   const hiddenNodeIds = useMemo(() => {
     const hidden = new Set<string>();
     const collapsed = new Set(nodes.filter(n => n.collapsed).map(n => n.id));

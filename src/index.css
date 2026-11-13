@@ -1,4 +1,5 @@
 :root {
+  /* Классика (по умолчанию) */
   --bg: #fafaf9;
   --panel: #ffffff;
   --text: #111111;
@@ -8,19 +9,118 @@
   --accent-text: #ffffff;
   --radius: 12px;
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* Цвета узлов (Классика) */
+  --node-thought-bg: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+  --node-thought-border: #d1d5db;
+  --node-thought-color: #111827;
+  
+  --node-question-bg: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  --node-question-border: #60a5fa;
+  --node-question-color: #1e3a8a;
+  
+  --node-fact-bg: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  --node-fact-border: #34d399;
+  --node-fact-color: #064e3b;
+  
+  --node-assumption-bg: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  --node-assumption-border: #fbbf24;
+  --node-assumption-color: #78350f;
+  
+  --node-criterion-bg: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  --node-criterion-border: #a78bfa;
+  --node-criterion-color: #4c1d95;
+  
+  --node-option-bg: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  --node-option-border: #fb923c;
+  --node-option-color: #7c2d12;
 }
 
+/* 🌌 ТЕМА: КОСМОС */
+[data-theme="cosmic"] {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --border: #334155;
+  --accent: #3b82f6;
+  --accent-text: #ffffff;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  --node-thought-bg: rgba(30, 41, 59, 0.9);
+  --node-thought-border: #38bdf8;
+  --node-thought-color: #e0f2fe;
+  
+  --node-question-bg: rgba(30, 41, 59, 0.9);
+  --node-question-border: #818cf8;
+  --node-question-color: #e0e7ff;
+  
+  --node-fact-bg: rgba(30, 41, 59, 0.9);
+  --node-fact-border: #34d399;
+  --node-fact-color: #d1fae5;
+  
+  --node-assumption-bg: rgba(30, 41, 59, 0.9);
+  --node-assumption-border: #fbbf24;
+  --node-assumption-color: #fef3c7;
+  
+  --node-criterion-bg: rgba(30, 41, 59, 0.9);
+  --node-criterion-border: #c084fc;
+  --node-criterion-color: #f3e8ff;
+  
+  --node-option-bg: rgba(30, 41, 59, 0.9);
+  --node-option-border: #fb923c;
+  --node-option-color: #ffedd5;
+}
+
+/* 🌿 ТЕМА: ОРГАНИКА */
+[data-theme="organic"] {
+  --bg: #f2fcf5;
+  --panel: #ffffff;
+  --text: #064e3b;
+  --muted: #64748b;
+  --border: #d1fae5;
+  --accent: #10b981;
+  --accent-text: #ffffff;
+  --shadow: 0 10px 25px rgba(16, 185, 129, 0.1);
+
+  --node-thought-bg: #ffffff;
+  --node-thought-border: #a7f3d0;
+  --node-thought-color: #064e3b;
+  
+  --node-question-bg: #eff6ff;
+  --node-question-border: #93c5fd;
+  --node-question-color: #1e3a8a;
+  
+  --node-fact-bg: #ecfdf5;
+  --node-fact-border: #6ee7b7;
+  --node-fact-color: #064e3b;
+  
+  --node-assumption-bg: #fffbeb;
+  --node-assumption-border: #fde68a;
+  --node-assumption-color: #78350f;
+  
+  --node-criterion-bg: #f5f3ff;
+  --node-criterion-border: #c4b5fd;
+  --node-criterion-color: #4c1d95;
+  
+  --node-option-bg: #fff7ed;
+  --node-option-border: #fdba74;
+  --node-option-color: #7c2d12;
+}
+
+/* Базовые стили */
 html, body, #root {
   height: 100%;
   margin: 0;
   overflow: hidden;
+  background-color: var(--bg);
+  color: var(--text);
 }
 
 body {
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
   -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .scrollable-page {
@@ -30,6 +130,7 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Панели */
 .side-panel {
   position: absolute;
   top: 16px;
@@ -46,9 +147,11 @@ body {
   max-height: calc(100vh - 100px);
   overflow-y: auto;
   z-index: 1000;
+  color: var(--text);
+  transition: all 0.3s ease;
 }
 
-/* Верхняя панель (Desktop) */
+/* Верхняя панель */
 .top-bar {
   position: absolute;
   top: 16px;
@@ -63,15 +166,14 @@ body {
   scrollbar-width: none;
 }
 
-.top-bar::-webkit-scrollbar {
-  display: none;
-}
+.top-bar::-webkit-scrollbar { display: none; }
 
 .top-btn {
   padding: 8px 16px;
   border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--panel);
+  color: var(--text);
   cursor: pointer;
   font-weight: 500;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -81,6 +183,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
 }
 
 .top-btn.primary {
@@ -89,49 +192,66 @@ body {
   border: 0;
 }
 
-/* Кнопки управления React Flow (зум) */
-.react-flow__controls {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-  border-radius: 8px !important;
-  overflow: hidden;
-}
-.react-flow__controls-button {
-  width: 36px !important;
-  height: 36px !important;
-}
-.react-flow__controls-button svg {
-  fill: #111 !important;
-  width: 16px !important;
-  height: 16px !important;
-}
-
-/* Мобильное меню (Сетка кнопок) */
-.mobile-menu-overlay {
-  position: absolute;
-  top: 60px;
-  left: 12px;
-  right: 12px;
-  background: #fff;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  z-index: 2000;
-  border: 1px solid var(--border);
-}
-
-.mobile-menu-btn {
-  padding: 12px 8px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: #fafaf9;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
+/* Компонент Узла */
+.thought-node {
+  padding: 16px 20px;
+  border-radius: 24px 24px 24px 4px;
+  min-width: 160px;
+  max-width: 260px;
   text-align: center;
+  font-size: 14px;
+  position: relative;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
+
+.thought-node.is-root {
+  border-width: 3px !important;
+  border-color: #eab308 !important;
+  box-shadow: 0 0 15px rgba(234, 179, 8, 0.4) !important;
+}
+
+.thought-node.is-selected {
+  box-shadow: 0 0 0 3px var(--accent), var(--shadow) !important;
+  z-index: 10;
+}
+
+.thought-node.is-resolved {
+  opacity: 0.6;
+  filter: grayscale(80%);
+  text-decoration: line-through;
+}
+
+.thought-node.is-deferred {
+  opacity: 0.7;
+  border-style: dashed !important;
+}
+
+/* Типы узлов */
+.type-thought { background: var(--node-thought-bg); border: 2px solid var(--node-thought-border); color: var(--node-thought-color); }
+.type-question { background: var(--node-question-bg); border: 2px solid var(--node-question-border); color: var(--node-question-color); }
+.type-fact { background: var(--node-fact-bg); border: 2px solid var(--node-fact-border); color: var(--node-fact-color); }
+.type-assumption { background: var(--node-assumption-bg); border: 2px solid var(--node-assumption-border); color: var(--node-assumption-color); }
+.type-criterion { background: var(--node-criterion-bg); border: 2px solid var(--node-criterion-border); color: var(--node-criterion-color); }
+.type-option { background: var(--node-option-bg); border: 2px solid var(--node-option-border); color: var(--node-option-color); }
+
+/* Анимации для Космоса */
+[data-theme="cosmic"] .thought-node {
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+[data-theme="cosmic"] .thought-node.type-thought { box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
+[data-theme="cosmic"] .thought-node.type-fact { box-shadow: 0 0 15px rgba(52, 211, 153, 0.3); }
+
+/* Скругления для Органики */
+[data-theme="organic"] .thought-node {
+  border-radius: 30px 30px 30px 30px;
+}
+
+/* React Flow настройки под темы */
+.react-flow__background { background-color: var(--bg) !important; }
+[data-theme="cosmic"] .react-flow__background pattern circle { fill: #334155 !important; }
+[data-theme="cosmic"] .react-flow__controls-button { background: var(--panel) !important; fill: var(--text) !important; border-bottom: 1px solid var(--border) !important; }
+[data-theme="cosmic"] .react-flow__controls-button:hover { background: var(--border) !important; }
 
 /* Мобильная версия */
 @media (max-width: 768px) {
@@ -147,27 +267,41 @@ body {
     padding-bottom: calc(20px + env(safe-area-inset-bottom, 20px));
     box-sizing: border-box;
   }
-  
-  /* На мобилках делаем верхнюю панель фиксированной и без скролла */
   .top-bar {
     top: 8px;
     left: 8px;
     right: 8px;
     gap: 6px;
     max-width: none;
-    overflow-x: visible;
-    flex-wrap: nowrap;
   }
-  
-  .top-btn {
-    padding: 8px 12px;
-    font-size: 13px;
-    /* Скрываем вторичные кнопки на мобилках */
-    display: none; 
-  }
+  .top-btn { padding: 8px 12px; font-size: 13px; display: none; }
+  .top-btn.mobile-show { display: flex; }
+}
 
-  /* Показываем только нужные */
-  .top-btn.mobile-show {
-    display: flex;
-  }
+.mobile-menu-overlay {
+  position: absolute;
+  top: 60px;
+  left: 12px;
+  right: 12px;
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  z-index: 2000;
+  border: 1px solid var(--border);
+}
+
+.mobile-menu-btn {
+  padding: 12px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
 }
