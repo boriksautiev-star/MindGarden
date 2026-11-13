@@ -11,6 +11,10 @@ export function ActionPlanModal({ profile, onClose }: { profile: AIProfile; onCl
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
+    setPlan(null);  // Сбрасываем старый план
+    setError(null); // Сбрасываем старую ошибку
+
     const relevantNodes = nodes.filter(n => n.status === 'resolved' || n.type === 'option');
     
     if (relevantNodes.length === 0) {
@@ -21,8 +25,11 @@ export function ActionPlanModal({ profile, onClose }: { profile: AIProfile; onCl
 
     generateActionPlan(relevantNodes, settings, profile).then(res => {
       setLoading(false);
-      if (typeof res === 'object' && 'error' in res) setError(res.error);
-      else setPlan(res as string);
+      if (typeof res === 'object' && 'error' in res) {
+        setError(res.error);
+      } else {
+        setPlan(res as string);
+      }
     });
   }, [nodes, settings, profile]);
 
@@ -42,9 +49,10 @@ export function ActionPlanModal({ profile, onClose }: { profile: AIProfile; onCl
       </div>
 
       {loading && <div style={{ fontSize: 14, color: '#b45309', textAlign: 'center', padding: '20px 0' }}>Собираем и структурируем ваши мысли...</div>}
+      
       {error && <div style={{ padding: 12, background: '#fee', color: '#c00', borderRadius: 10, fontSize: 14 }}>{error}</div>}
 
-      {plan && (
+      {plan && !error && (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <div style={{ flex: 1, overflowY: 'auto', fontSize: 14, color: '#333', lineHeight: 1.6, whiteSpace: 'pre-wrap', background: '#fff', padding: 16, borderRadius: 10, border: '1px solid #fde68a' }}>
             {plan}
