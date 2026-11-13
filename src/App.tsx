@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
-import { ReactFlow, Background, Controls, MiniMap, useNodesState, useEdgesState, addEdge, type Node as RFNode, type Edge as RFEdge, type Connection } from '@xyflow/react';
+import { ReactFlow, ReactFlowProvider, Background, Controls, MiniMap, useNodesState, useEdgesState, addEdge, useReactFlow, type Node as RFNode, type Edge as RFEdge, type Connection } from '@xyflow/react';
 import dagre from 'dagre';
 import '@xyflow/react/dist/style.css';
 import { useStore } from './store';
@@ -20,11 +20,13 @@ import type { BuildMode, NodeType } from './types';
 const nodeTypes = { custom: ThoughtNode };
 const edgeTypes = { custom: ThoughtEdge };
 
-export default function App() {
+function AppContent() {
   const { 
     activeGardenId, gardens, nodes, edges, settings, loaded, 
     loadInitial, goToGardens, addNode, bulkAddFromAI, updateGardenOriginalText, updatePosition, updateAllPositions, addEdge: storeAddEdge, deleteEdge, deduplicateNodes
   } = useStore();
+  
+  const { fitView } = useReactFlow();
   
   const [rfNodes, setRfNodes, onNodesChange] = useNodesState<RFNode>([]);
   const [rfEdges, setRfEdges, onEdgesChange] = useEdgesState<RFEdge>([]);
@@ -114,8 +116,10 @@ export default function App() {
       });
       
       updateAllPositions(newPositions);
+      // Автоматически центрируем после раскладки
+      setTimeout(() => fitView({ padding: 0.2, duration: 800 }), 100);
     } catch (e: any) { console.error(e); }
-  }, [updateAllPositions]);
+  }, [updateAllPositions, fitView]);
 
   const handleAddChild = useCallback(async (nodeId: string) => {
     const node = nodes.find(n => n.id === nodeId);
@@ -177,6 +181,15 @@ export default function App() {
     }));
   }, [visibleEdges, selectedNodeId, pathEdges, setRfEdges]);
 
+  // Автоцентрирование при первом открытии сада
+  useEffect(() => {
+    if (nodes.length > 0) {
+      // Небольшая задержка, чтобы React Flow успел отрисовать узлы
+      const timer = setTimeout(() => fitView({ padding: 0.2, duration: 400 }), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [activeGardenId, fitView]);
+
   const onConnect = useCallback((params: Connection) => {
     if (params.source && params.target) {
       setRfEdges((eds) => addEdge({ ...params, type: 'custom', animated: true, style: { stroke: 'var(--edge-related)', strokeDasharray: '5,5' } }, eds));
@@ -209,7 +222,6 @@ export default function App() {
   const activeGarden = gardens.find(g => g.id === activeGardenId);
   const currentProfile = activeGarden?.profile || 'psychology';
 
-  // Цвета для мини-карты
   const getMiniMapNodeColor = (node: RFNode) => {
     switch (node.data.type as NodeType) {
       case 'question': return '#60a5fa';
@@ -266,8 +278,6 @@ export default function App() {
         onEdgeClick={() => { setSelectedNodeId(null); setAgentContext(null); }} 
         onPaneClick={() => { setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); setShowActionPlan(false); setShowAutoLink(false); setShowMobileMenu(false); }} 
         nodeTypes={nodeTypes} edgeTypes={edgeTypes} elevateEdgesOnSelect={true} 
-        fitView 
-        fitViewOptions={{ padding: 0.2 }}
         minZoom={0.05}
       >
         <Background color="var(--muted)" gap={20} size={1} />
@@ -302,6 +312,7 @@ export default function App() {
         <button className="top-btn" onClick={() => { setShowGraphAnalyzer(true); setSelectedNodeId(null); setAgentContext(null); setShowActionPlan(false); setShowAutoLink(false); }} style={{ background: '#f5f3ff', color: '#4c1d95', borderColor: '#a78bfa' }}>✨ Анализ</button>
         <button className="top-btn" onClick={() => { setShowActionPlan(true); setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); setShowAutoLink(false); }} style={{ background: '#fffbeb', color: '#b45309', borderColor: '#fcd34d' }}>🌾 Урожай</button>
         <button className="top-btn" onClick={() => { setShowAutoLink(true); setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); setShowActionPlan(false); }} style={{ background: '#f0f9ff', color: '#0369a1', borderColor: '#7dd3fc' }}>🔗 Связи</button>
+        <button className="top-btn" onClick={() => fitView({ padding: 0.2, duration: 800 })} style={{ background: '#e0f2fe', color: '#0369a1', borderColor: '#7dd3fc' }}>🎯 Фокус</button>
         
         <button className="top-btn primary mobile-show" onClick={() => { if(selectedNodeId) handleAddChild(selectedNodeId); else alert('Сначала выбери узел на графе'); }} disabled={isGenerating}>
           {isGenerating ? '...' : '+ Узел'}
@@ -316,6 +327,7 @@ export default function App() {
           <button className="mobile-menu-btn" onClick={() => { setShowGraphAnalyzer(true); setSelectedNodeId(null); setShowMobileMenu(false); }}>✨ Анализ</button>
           <button className="mobile-menu-btn" onClick={() => { setShowActionPlan(true); setSelectedNodeId(null); setShowMobileMenu(false); }}>🌾 Урожай</button>
           <button className="mobile-menu-btn" onClick={() => { setShowAutoLink(true); setSelectedNodeId(null); setShowMobileMenu(false); }}>🔗 Связи</button>
+          <button className="mobile-menu-btn" onClick={() => { fitView({ padding: 0.2, duration: 800 }); setShowMobileMenu(false); }}>🎯 Фокус</button>
         </div>
       )}
 
@@ -343,5 +355,13 @@ export default function App() {
       {debateNodeId && <DebateModal nodeId={debateNodeId} nodeLabel={nodes.find(n => n.id === debateNodeId)?.label || ''} profile={currentProfile} onClose={() => setDebateNodeId(null)} />}
       {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ReactFlowProvider>
+      <AppContent />
+    </ReactFlowProvider>
   );
 }
