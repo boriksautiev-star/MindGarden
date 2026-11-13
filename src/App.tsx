@@ -42,6 +42,9 @@ export default function App() {
   const [showActionPlan, setShowActionPlan] = useState(false);
   const [showAutoLink, setShowAutoLink] = useState(false);
   const [debateNodeId, setDebateNodeId] = useState<string | null>(null);
+  
+  // Стейт для мобильного меню
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   useEffect(() => { loadInitial(); }, [loadInitial]);
 
@@ -91,7 +94,8 @@ export default function App() {
     try {
       const dagreGraph = new dagre.graphlib.Graph();
       dagreGraph.setDefaultEdgeLabel(() => ({}));
-      dagreGraph.setGraph({ rankdir: 'TB', nodesep: 60, ranksep: 80 });
+      // Уменьшили отступы для более компактного графа
+      dagreGraph.setGraph({ rankdir: 'TB', nodesep: 40, ranksep: 60 }); 
       
       currentNodes.forEach((node) => dagreGraph.setNode(node.id, { width: 200, height: 80 }));
       currentEdges.forEach((edge) => dagreGraph.setEdge(edge.source, edge.target));
@@ -205,7 +209,7 @@ export default function App() {
 
   if (nodes.length === 0) {
     return (
-      <div style={{ minHeight: '100dvh', display: 'grid', placeItems: 'center', padding: 24 }}>
+      <div className="scrollable-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 24 }}>
         <div style={{ width: '100%', maxWidth: 640 }}>
           <button onClick={goToGardens} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', marginBottom: 16 }}>← К садам</button>
           <h1 style={{ fontSize: 32, marginBottom: 8 }}>Вывали всё, что в голове</h1>
@@ -241,22 +245,27 @@ export default function App() {
         nodes={rfNodes} edges={rfEdges} 
         onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} onEdgesDelete={onEdgesDelete} 
         onNodeDragStop={(_, node) => updatePosition(node.id, node.position.x, node.position.y)} 
-        onNodeClick={(_, node) => { setSelectedNodeId(node.id); setAgentContext(null); setShowGraphAnalyzer(false); setShowActionPlan(false); setShowAutoLink(false); }} 
+        onNodeClick={(_, node) => { setSelectedNodeId(node.id); setAgentContext(null); setShowGraphAnalyzer(false); setShowActionPlan(false); setShowAutoLink(false); setShowMobileMenu(false); }} 
         onEdgeClick={() => { setSelectedNodeId(null); setAgentContext(null); }} 
-        onPaneClick={() => { setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); setShowActionPlan(false); setShowAutoLink(false); }} 
-        nodeTypes={nodeTypes} edgeTypes={edgeTypes} elevateEdgesOnSelect={true} fitView
+        onPaneClick={() => { setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); setShowActionPlan(false); setShowAutoLink(false); setShowMobileMenu(false); }} 
+        nodeTypes={nodeTypes} edgeTypes={edgeTypes} elevateEdgesOnSelect={true} 
+        fitView 
+        fitViewOptions={{ padding: 0.2 }}
+        minZoom={0.05}
       >
         <Background />
         <Controls />
       </ReactFlow>
 
       <div className="top-bar">
-        <button className="top-btn" onClick={goToGardens}>← К садам</button>
-        <button className="top-btn" onClick={() => setShowSettings(true)}>⚙️</button>
+        {/* Эти кнопки видны всегда */}
+        <button className="top-btn mobile-show" onClick={goToGardens}>← К садам</button>
+        <button className="top-btn mobile-show" onClick={() => setShowSettings(true)}>⚙️</button>
         
         <select 
           value={buildMode} 
           onChange={(e) => setBuildMode(e.target.value as BuildMode)}
+          className="mobile-show"
           style={{ padding: '8px', borderRadius: 8, border: '1px solid #ddd', background: '#fff', fontSize: 13, cursor: 'pointer', outline: 'none' }}
         >
           <option value="manual">🖐 Ручной</option>
@@ -264,6 +273,10 @@ export default function App() {
           <option value="auto">🚀 Автомат</option>
         </select>
 
+        {/* Кнопка мобильного меню */}
+        <button className="top-btn mobile-show" onClick={() => setShowMobileMenu(!showMobileMenu)}>⋮ Меню</button>
+
+        {/* Остальные кнопки скрыты на мобилках, но видны на ПК */}
         <button className="top-btn" onClick={() => setShowOriginalText(true)}>📄 Исходник</button>
         <button className="top-btn" onClick={() => { deduplicateNodes(); setTimeout(handleLayout, 100); }} style={{ background: '#fef2f2', color: '#991b1b', borderColor: '#fca5a5' }}>🧹 Очистить</button>
         <button className="top-btn" onClick={handleLayout} style={{ background: '#ecfdf5', color: '#064e3b', borderColor: '#34d399' }}>🌿 Упорядочить</button>
@@ -271,10 +284,23 @@ export default function App() {
         <button className="top-btn" onClick={() => { setShowActionPlan(true); setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); setShowAutoLink(false); }} style={{ background: '#fffbeb', color: '#b45309', borderColor: '#fcd34d' }}>🌾 Урожай</button>
         <button className="top-btn" onClick={() => { setShowAutoLink(true); setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); setShowActionPlan(false); }} style={{ background: '#f0f9ff', color: '#0369a1', borderColor: '#7dd3fc' }}>🔗 Связи</button>
         
-        <button className="top-btn primary" onClick={() => { if(selectedNodeId) handleAddChild(selectedNodeId); else alert('Сначала выбери узел на графе'); }} disabled={isGenerating}>
+        {/* Главная кнопка видна всегда */}
+        <button className="top-btn primary mobile-show" onClick={() => { if(selectedNodeId) handleAddChild(selectedNodeId); else alert('Сначала выбери узел на графе'); }} disabled={isGenerating}>
           {isGenerating ? '...' : '+ Узел'}
         </button>
       </div>
+
+      {/* Мобильное меню (Сетка) */}
+      {showMobileMenu && (
+        <div className="mobile-menu-overlay">
+          <button className="mobile-menu-btn" onClick={() => { setShowOriginalText(true); setShowMobileMenu(false); }}>📄 Исходник</button>
+          <button className="mobile-menu-btn" onClick={() => { deduplicateNodes(); setTimeout(handleLayout, 100); setShowMobileMenu(false); }}>🧹 Очистить</button>
+          <button className="mobile-menu-btn" onClick={() => { handleLayout(); setShowMobileMenu(false); }}>🌿 Упорядочить</button>
+          <button className="mobile-menu-btn" onClick={() => { setShowGraphAnalyzer(true); setSelectedNodeId(null); setShowMobileMenu(false); }}>✨ Анализ</button>
+          <button className="mobile-menu-btn" onClick={() => { setShowActionPlan(true); setSelectedNodeId(null); setShowMobileMenu(false); }}>🌾 Урожай</button>
+          <button className="mobile-menu-btn" onClick={() => { setShowAutoLink(true); setSelectedNodeId(null); setShowMobileMenu(false); }}>🔗 Связи</button>
+        </div>
+      )}
 
       {selectedNodeId && !agentContext && (
         <NodeInspector 
