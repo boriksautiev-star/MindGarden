@@ -32,10 +32,9 @@ export function NodeInspector({ nodeId, profile, onAskAgent, onDebate, onClose }
 
   const handleGetInsight = async () => {
     setIsLoadingInsight(true);
-    setInsight(null); // Сбрасываем предыдущий результат
+    setInsight(null);
     
     try {
-      // Находим родителей и детей
       const parentEdges = edges.filter(e => e.target === node.id);
       const childEdges = edges.filter(e => e.source === node.id);
       
@@ -110,9 +109,14 @@ export function NodeInspector({ nodeId, profile, onAskAgent, onDebate, onClose }
         )}
       </div>
 
-      <button onClick={onAskAgent} style={{ padding: '10px', borderRadius: 8, border: 0, background: '#111', color: '#fff', cursor: 'pointer', fontSize: 15, marginTop: 8 }}>
-        Спросить агента в чате
-      </button>
+      <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+        <button onClick={onAskAgent} style={{ flex: 1, padding: '10px', borderRadius: 8, border: 0, background: '#111', color: '#fff', cursor: 'pointer', fontSize: 15 }}>
+          Чат
+        </button>
+        <button onClick={onDebate} style={{ flex: 1, padding: '10px', borderRadius: 8, border: 0, background: '#d946ef', color: '#fff', cursor: 'pointer', fontSize: 15 }}>
+          ⚔️ Дебаты
+        </button>
+      </div>
 
       <button onClick={() => { deleteNode(node.id); onClose(); }} style={{ padding: '10px', borderRadius: 8, border: '1px solid #fee', background: '#fff0f0', color: '#c00', cursor: 'pointer', fontSize: 15 }}>
         Удалить узел
