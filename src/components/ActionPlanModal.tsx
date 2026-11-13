@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { generateActionPlan } from '../ai';
 import { useStore } from '../store';
 import type { AIProfile } from '../types';
@@ -9,11 +9,17 @@ export function ActionPlanModal({ profile, onClose }: { profile: AIProfile; onCl
   const [plan, setPlan] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  
+  // Защита от двойного вызова в React StrictMode
+  const hasFetched = useRef(false);
 
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
     setLoading(true);
-    setPlan(null);  // Сбрасываем старый план
-    setError(null); // Сбрасываем старую ошибку
+    setPlan(null);
+    setError(null);
 
     const relevantNodes = nodes.filter(n => n.status === 'resolved' || n.type === 'option');
     
@@ -50,7 +56,7 @@ export function ActionPlanModal({ profile, onClose }: { profile: AIProfile; onCl
 
       {loading && <div style={{ fontSize: 14, color: '#b45309', textAlign: 'center', padding: '20px 0' }}>Собираем и структурируем ваши мысли...</div>}
       
-      {error && <div style={{ padding: 12, background: '#fee', color: '#c00', borderRadius: 10, fontSize: 14 }}>{error}</div>}
+      {error && <div style={{ padding: 12, background: '#fee', color: '#c00', borderRadius: 10, fontSize: 14, lineHeight: 1.4 }}>{error}</div>}
 
       {plan && !error && (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>

@@ -81,6 +81,7 @@ export async function askAgent(
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ model: 'GigaChat-2', messages })
       });
+      if (res.status === 429) throw new Error('Слишком много запросов к GigaChat. Пожалуйста, подождите 1-2 минуты.');
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return extractJSON((await res.json()).choices[0].message.content);
     }
@@ -130,6 +131,7 @@ ${treeSizePrompt}
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt + '\n\nВАЖНО: Верни ответ ТОЛЬКО в виде валидного JSON.' }, { role: 'user', content: text }] })
       });
+      if (res.status === 429) throw new Error('Слишком много запросов к GigaChat. Пожалуйста, подождите 1-2 минуты.');
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return extractJSON((await res.json()).choices[0].message.content);
     }
@@ -176,6 +178,7 @@ ${edgesText}
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt + '\n\nВАЖНО: Верни ответ ТОЛЬКО в виде валидного JSON.' }, { role: 'user', content: 'Проанализируй.' }] })
       });
+      if (res.status === 429) throw new Error('Слишком много запросов к GigaChat. Пожалуйста, подождите 1-2 минуты.');
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return extractJSON((await res.json()).choices[0].message.content);
     }
@@ -216,6 +219,7 @@ export async function getNodeInsight(
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: 'Объясни.' }] })
       });
+      if (res.status === 429) throw new Error('Слишком много запросов к GigaChat. Пожалуйста, подождите 1-2 минуты.');
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return (await res.json()).choices[0].message.content;
     }
@@ -257,6 +261,7 @@ export async function expandNode(
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt + '\n\nВАЖНО: Верни ответ ТОЛЬКО в виде валидного JSON.' }, { role: 'user', content: 'Сгенерируй.' }] })
       });
+      if (res.status === 429) throw new Error('Слишком много запросов к GigaChat. Пожалуйста, подождите 1-2 минуты.');
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return extractJSON((await res.json()).choices[0].message.content);
     }
@@ -297,6 +302,7 @@ ${context}
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: 'Составь план действий.' }] })
       });
+      if (res.status === 429) throw new Error('Слишком много запросов к GigaChat. Пожалуйста, подождите 1-2 минуты.');
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
       return (await res.json()).choices[0].message.content;
     }
