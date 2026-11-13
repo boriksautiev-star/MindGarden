@@ -366,6 +366,8 @@ ${edgesText}
 
 export async function generateDebate(
   nodeLabel: string,
+  parents: string[],
+  children: string[],
   profile: AIProfile,
   settings: Settings | null
 ): Promise<string | { error: string }> {
@@ -374,6 +376,9 @@ export async function generateDebate(
   const { provider, apiKey } = settings;
   const sysPrompt = `Ты — ведущий интеллектуального шоу. Профиль дискуссии: ${PROFILE_PROMPTS[profile]}.
 Тема дискуссии (узел мыслей пользователя): "${nodeLabel}".
+Контекст:
+- Откуда пришла эта мысль (родители): ${parents.length ? parents.join('; ') : 'нет (это корень)'}
+- К чему она ведет (дети): ${children.length ? children.join('; ') : 'пока нет'}
 
 Твоя задача — сгенерировать короткий, живой диалог между двумя экспертами:
 1. "За" (Оптимист/Защитник) — он приводит аргументы в пользу этой мысли, видит в ней потенциал.

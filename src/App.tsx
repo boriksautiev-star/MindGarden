@@ -41,7 +41,7 @@ export default function App() {
   const [showOriginalText, setShowOriginalText] = useState(false);
   const [showActionPlan, setShowActionPlan] = useState(false);
   const [showAutoLink, setShowAutoLink] = useState(false);
-  const [debateNodeLabel, setDebateNodeLabel] = useState<string | null>(null);
+  const [debateNodeId, setDebateNodeId] = useState<string | null>(null);
 
   useEffect(() => { loadInitial(); }, [loadInitial]);
 
@@ -287,7 +287,7 @@ export default function App() {
           }} 
           onDebate={() => {
             const node = nodes.find(n => n.id === selectedNodeId);
-            if (node) setDebateNodeLabel(node.label);
+            if (node) setDebateNodeId(node.id);
           }}
         />
       )}
@@ -297,7 +297,7 @@ export default function App() {
       {showOriginalText && <OriginalTextModal onClose={() => setShowOriginalText(false)} />}
       {showActionPlan && <ActionPlanModal profile={currentProfile} onClose={() => setShowActionPlan(false)} />}
       {showAutoLink && <AutoLinkModal onClose={() => setShowAutoLink(false)} />}
-      {debateNodeLabel && <DebateModal nodeLabel={debateNodeLabel} profile={currentProfile} onClose={() => setDebateNodeLabel(null)} />}
+      {debateNodeId && <DebateModal nodeId={debateNodeId} nodeLabel={nodes.find(n => n.id === debateNodeId)?.label || ''} profile={currentProfile} onClose={() => setDebateNodeId(null)} />}
       {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
     </div>
   );

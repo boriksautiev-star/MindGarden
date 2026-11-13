@@ -3,8 +3,8 @@ import { generateDebate } from '../ai';
 import { useStore } from '../store';
 import type { AIProfile } from '../types';
 
-export function DebateModal({ nodeLabel, profile, onClose }: { nodeLabel: string; profile: AIProfile; onClose: () => void }) {
-  const { settings } = useStore();
+export function DebateModal({ nodeId, nodeLabel, profile, onClose }: { nodeId: string; nodeLabel: string; profile: AIProfile; onClose: () => void }) {
+  const { settings, nodes, edges } = useStore();
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -15,7 +15,13 @@ export function DebateModal({ nodeLabel, profile, onClose }: { nodeLabel: string
     if (hasFetched.current) return;
     hasFetched.current = true;
 
-    generateDebate(nodeLabel, profile, settings).then(res => {
+    const parentEdges = edges.filter(e => e.target === nodeId);
+    const childEdges = edges.filter(e => e.source === nodeId);
+    
+    const parentLabels = parentEdges.map(e => nodes.find(n => n.id === e.source)?.label || '').filter(Boolean);
+    const childLabels = childEdges.map(e => nodes.find(n => n.id === e.target)?.label || '').filter(Boolean);
+
+    generateDebate(nodeLabel, parentLabels, childLabels, profile, settings).then(res => {
       setLoading(false);
       if (typeof res === 'object' && 'error' in res) {
         setError(res.error);
@@ -23,7 +29,7 @@ export function DebateModal({ nodeLabel, profile, onClose }: { nodeLabel: string
         setText(res as string);
       }
     });
-  }, [nodeLabel, profile, settings]);
+  }, [nodeId, nodeLabel, profile, settings, nodes, edges]);
 
   return (
     <div className="side-panel" style={{ background: '#fdf4ff', borderLeft: '4px solid #d946ef', display: 'flex', flexDirection: 'column' }}>
