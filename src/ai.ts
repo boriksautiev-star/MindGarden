@@ -363,3 +363,43 @@ ${edgesText}
     return { error: `Ошибка: ${err.message}` };
   }
 }
+
+export async function generateDebate(
+  nodeLabel: string,
+  profile: AIProfile,
+  settings: Settings | null
+): Promise<string | { error: string }> {
+  if (!settings || !settings.apiKey) return { error: 'Ключ не настроен.' };
+
+  const { provider, apiKey } = settings;
+  const sysPrompt = `Ты — ведущий интеллектуального шоу. Профиль дискуссии: ${PROFILE_PROMPTS[profile]}.
+Тема дискуссии (узел мыслей пользователя): "${nodeLabel}".
+
+Твоя задача — сгенерировать короткий, живой диалог между двумя экспертами:
+1. "За" (Оптимист/Защитник) — он приводит аргументы в пользу этой мысли, видит в ней потенциал.
+2. "Против" (Скептик/Критик) — он ищет слабые места, риски и контраргументы.
+
+Напиши их диалог в 3-4 реплики с каждой стороны. Формат вывода — обычный текст (без JSON), где каждая реплика начинается с имени спикера (например, **За:** и **Против:**). Используй Markdown для выделения жирным имен.`;
+
+  try {
+    if (provider === 'gigachat') {
+      const tokenRes = await fetch('/gigachat-auth/api/v2/oauth', {
+        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json', 'RqUID': generateUUID(), 'Authorization': `Basic ${apiKey}` },
+        body: 'scope=GIGACHAT_API_PERS'
+      });
+      if (!tokenRes.ok) throw new Error(`Auth: ${tokenRes.status}`);
+      const token = (await tokenRes.json()).access_token;
+      
+      const res = await fetch('/gigachat-api/v1/chat/completions', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: 'Начните дебаты.' }] })
+      });
+      if (res.status === 429) throw new Error('Слишком много запросов к GigaChat. Пожалуйста, подождите 1-2 минуты.');
+      if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);
+      return (await res.json()).choices[0].message.content;
+    }
+    return { error: 'Пока поддерживается только GigaChat' };
+  } catch (err: any) {
+    return { error: `${err.message}` };
+  }
+}

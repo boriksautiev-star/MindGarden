@@ -13,6 +13,7 @@ import { GraphAnalyzerPanel } from './components/GraphAnalyzerPanel';
 import { OriginalTextModal } from './components/OriginalTextModal';
 import { ActionPlanModal } from './components/ActionPlanModal';
 import { AutoLinkModal } from './components/AutoLinkModal';
+import { DebateModal } from './components/DebateModal';
 import { generateInitialTree, expandNode } from './ai';
 import type { BuildMode } from './types';
 
@@ -40,6 +41,7 @@ export default function App() {
   const [showOriginalText, setShowOriginalText] = useState(false);
   const [showActionPlan, setShowActionPlan] = useState(false);
   const [showAutoLink, setShowAutoLink] = useState(false);
+  const [debateNodeLabel, setDebateNodeLabel] = useState<string | null>(null);
 
   useEffect(() => { loadInitial(); }, [loadInitial]);
 
@@ -291,6 +293,7 @@ export default function App() {
       {showOriginalText && <OriginalTextModal onClose={() => setShowOriginalText(false)} />}
       {showActionPlan && <ActionPlanModal profile={currentProfile} onClose={() => setShowActionPlan(false)} />}
       {showAutoLink && <AutoLinkModal onClose={() => setShowAutoLink(false)} />}
+      {debateNodeLabel && <DebateModal nodeLabel={debateNodeLabel} profile={currentProfile} onClose={() => setDebateNodeLabel(null)} />}
       {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
     </div>
   );

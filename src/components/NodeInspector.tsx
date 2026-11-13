@@ -12,7 +12,7 @@ const statusLabels: Record<NodeStatus, string> = {
   open: 'В работе', checked: 'Проверено', resolved: 'Решено', deferred: 'Отложено',
 };
 
-export function NodeInspector({ nodeId, profile, onAskAgent, onClose }: { nodeId: string; profile: AIProfile; onAskAgent: () => void; onClose: () => void }) {
+export function NodeInspector({ nodeId, profile, onAskAgent, onDebate, onClose }: { nodeId: string; profile: AIProfile; onAskAgent: () => void; onDebate: () => void; onClose: () => void }) {
   const { nodes, edges, settings, updateNodeType, updateNodeStatus, updateNodeLabel, deleteNode } = useStore();
   const node = nodes.find(n => n.id === nodeId);
   const [editText, setEditText] = useState('');
