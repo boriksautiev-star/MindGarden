@@ -286,8 +286,21 @@ export async function generateActionPlan(
 Пользователь собрал "урожай" из своего сада мыслей. Вот его решенные идеи и выбранные варианты:
 ${context}
 
-Твоя задача — составить из этого четкий, практический пошаговый план действий (To-Do List). 
-Выдели самые важные шаги. Пиши кратко, по делу, с эмодзи для наглядности. Не используй сложные термины.`;
+Твоя задача — выполнить два шага:
+1. Составь четкий, практический пошаговый план действий (To-Do List) из этих мыслей. Выдели самые важные шаги. Пиши кратко, по делу, с эмодзи.
+2. После плана устрой короткие дебаты (3-4 реплики) между двумя экспертами по поводу этого плана:
+   - **Оптимист** (верит в успех, ищет плюсы и скрытые возможности).
+   - **Скептик** (указывает на риски, слабые места и что может пойти не так).
+
+Выведи ответ красиво, используя Markdown.
+Пример:
+## 📋 План действий
+1. Шаг...
+2. Шаг...
+
+## ⚔️ Критика плана (Дебаты)
+**Оптимист:** ...
+**Скептик:** ...`;
 
   try {
     if (provider === 'gigachat') {
@@ -300,7 +313,7 @@ ${context}
       
       const res = await fetch('/gigachat-api/v1/chat/completions', {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: 'Составь план действий.' }] })
+        body: JSON.stringify({ model: 'GigaChat-2', messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: 'Составь план и проведи дебаты.' }] })
       });
       if (res.status === 429) throw new Error('Слишком много запросов к GigaChat. Пожалуйста, подождите 1-2 минуты.');
       if (!res.ok) throw new Error(`GigaChat API: ${res.status}`);

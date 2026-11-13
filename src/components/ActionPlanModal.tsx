@@ -10,7 +10,6 @@ export function ActionPlanModal({ profile, onClose }: { profile: AIProfile; onCl
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   
-  // Защита от двойного вызова в React StrictMode
   const hasFetched = useRef(false);
 
   useEffect(() => {
@@ -50,11 +49,11 @@ export function ActionPlanModal({ profile, onClose }: { profile: AIProfile; onCl
   return (
     <div className="side-panel" style={{ background: '#fffbeb', borderLeft: '4px solid #f59e0b', display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <div style={{ fontSize: 14, color: '#b45309', fontWeight: 700 }}>🌾 Урожай идей ({profile})</div>
+        <div style={{ fontSize: 14, color: '#b45309', fontWeight: 700 }}>🌾 Урожай и дебаты ({profile})</div>
         <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 20 }}>✕</button>
       </div>
 
-      {loading && <div style={{ fontSize: 14, color: '#b45309', textAlign: 'center', padding: '20px 0' }}>Собираем и структурируем ваши мысли...</div>}
+      {loading && <div style={{ fontSize: 14, color: '#b45309', textAlign: 'center', padding: '20px 0' }}>Собираем урожай и готовим аргументы...</div>}
       
       {error && <div style={{ padding: 12, background: '#fee', color: '#c00', borderRadius: 10, fontSize: 14, lineHeight: 1.4 }}>{error}</div>}
 
@@ -67,7 +66,7 @@ export function ActionPlanModal({ profile, onClose }: { profile: AIProfile; onCl
             onClick={handleCopy} 
             style={{ marginTop: 12, padding: '12px', borderRadius: 8, border: 0, background: copied ? '#10b981' : '#f59e0b', color: '#fff', cursor: 'pointer', fontSize: 15, fontWeight: 600, transition: 'background 0.2s' }}
           >
-            {copied ? '✅ Скопировано!' : '📋 Скопировать план'}
+            {copied ? '✅ Скопировано!' : '📋 Скопировать план и дебаты'}
           </button>
         </div>
       )}
