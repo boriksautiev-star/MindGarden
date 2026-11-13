@@ -99,12 +99,17 @@ function AppContent() {
     const currentEdges = useStore.getState().edges;
     if (currentNodes.length === 0) return;
     
+    const isMobile = window.innerWidth <= 768;
+    const nodeWidth = isMobile ? 180 : 220;
+    const nodeHeight = isMobile ? 80 : 90;
+
     try {
       const dagreGraph = new dagre.graphlib.Graph();
       dagreGraph.setDefaultEdgeLabel(() => ({}));
-      dagreGraph.setGraph({ rankdir: 'TB', nodesep: 30, ranksep: 50 });
+      dagreGraph.setGraph({ rankdir: 'TB', nodesep: 40, ranksep: 60 });
       
-      currentNodes.forEach((node) => dagreGraph.setNode(node.id, { width: 200, height: 80 }));
+      // Важно: сбрасываем старые координаты, чтобы Dagre строил всё с нуля
+      currentNodes.forEach((node) => dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight }));
       currentEdges.forEach((edge) => dagreGraph.setEdge(edge.source, edge.target));
       
       dagre.layout(dagreGraph);
@@ -112,12 +117,11 @@ function AppContent() {
       const newPositions: Record<string, { x: number; y: number }> = {};
       currentNodes.forEach((node) => {
         const nodeWithPosition = dagreGraph.node(node.id);
-        newPositions[node.id] = { x: nodeWithPosition.x - 100, y: nodeWithPosition.y - 40 };
+        newPositions[node.id] = { x: nodeWithPosition.x - nodeWidth/2, y: nodeWithPosition.y - nodeHeight/2 };
       });
       
       updateAllPositions(newPositions);
-      // Автоматически центрируем после раскладки
-      setTimeout(() => fitView({ padding: 0.2, duration: 800 }), 100);
+      setTimeout(() => fitView({ padding: 0.2, duration: 800, minZoom: 0.3 }), 100);
     } catch (e: any) { console.error(e); }
   }, [updateAllPositions, fitView]);
 
@@ -151,11 +155,19 @@ function AppContent() {
   }, [nodes, buildMode, gardens, activeGardenId, settings, addNode, storeAddEdge, bulkAddFromAI, handleLayout]);
 
   useEffect(() => { 
+    const isMobile = window.innerWidth <= 768;
+    const nodeWidth = isMobile ? 180 : 220;
+    const nodeHeight = isMobile ? 80 : 90;
+
     setRfNodes(visibleNodes.map(n => {
       const isDimmed = selectedNodeId !== null && !pathNodes.has(n.id);
       const hasChildren = edges.some(e => e.source === n.id);
       return { 
-        id: n.id, type: 'custom', position: { x: n.x, y: n.y }, 
+        id: n.id, 
+        type: 'custom', 
+        position: { x: n.x, y: n.y }, 
+        width: nodeWidth,   // Передаем width и height для MiniMap!
+        height: nodeHeight,
         data: { 
           label: n.label, type: n.type, status: n.status, 
           isRoot: rootNodeIds.has(n.id),
@@ -181,11 +193,9 @@ function AppContent() {
     }));
   }, [visibleEdges, selectedNodeId, pathEdges, setRfEdges]);
 
-  // Автоцентрирование при первом открытии сада
   useEffect(() => {
     if (nodes.length > 0) {
-      // Небольшая задержка, чтобы React Flow успел отрисовать узлы
-      const timer = setTimeout(() => fitView({ padding: 0.2, duration: 400 }), 200);
+      const timer = setTimeout(() => fitView({ padding: 0.2, duration: 400, minZoom: 0.3 }), 200);
       return () => clearTimeout(timer);
     }
   }, [activeGardenId, fitView]);
@@ -278,13 +288,13 @@ function AppContent() {
         onEdgeClick={() => { setSelectedNodeId(null); setAgentContext(null); }} 
         onPaneClick={() => { setSelectedNodeId(null); setAgentContext(null); setShowGraphAnalyzer(false); setShowActionPlan(false); setShowAutoLink(false); setShowMobileMenu(false); }} 
         nodeTypes={nodeTypes} edgeTypes={edgeTypes} elevateEdgesOnSelect={true} 
-        minZoom={0.05}
+        minZoom={0.2} // Ограничиваем отдаление
       >
         <Background color="var(--muted)" gap={20} size={1} />
         <Controls />
         <MiniMap 
           nodeColor={getMiniMapNodeColor} 
-          maskColor="rgba(0,0,0,0.1)" 
+          maskColor="var(--border)" // Делаем маску видимой
           position="bottom-right"
         />
       </ReactFlow>
